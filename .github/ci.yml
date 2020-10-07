@@ -3,6 +3,7 @@ on: pull_request
 jobs:
   build:
     name: Lint, Test, & Build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
       - uses: actions/setup-node@v1
