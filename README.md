@@ -1,3 +1,7 @@
+# Playback Sync
+
+A browser extension that enables you to sync videos from your favorite streaming platforms, across multiple devices.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -12,6 +16,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
+Even though we're building a browser extension, hot reloading makes it easy to inspect changes fast.<br />
+Use this feature to facilitate rapid development.
+
 ### `yarn test`
 
 Launches the test runner in the interactive watch mode.<br />
@@ -19,15 +26,23 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the plugin using the bash file in `/scripts/build`.<br />
+Under the hood, it uses `react-scripts` to build the project, but we need to take a few extra steps like renaming the root html file and setting env variables. <br />
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+After you've built the plugin, Take to the following steps to enable it in **Chrome**:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Navigate to the [extensions](chrome://extensions) page
+- Enable *Developer Mode* in the upper right hand corner of the page
+- Click "Load Unpacked" to load the unpacked plugin build
+- Open the *build* folder the script produced
+
+That's it! You should see the plugin icon where the rest of the extensions live. If you need to build again, click the plugin's refresh button on the extensions page after doing so.
 
 ### `yarn eject`
+
+**DO NOT USE THIS COMMAND**
+
+I'm keeping the info here because I might want to modify the webpack config later, but there's no need to use this right now.
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
