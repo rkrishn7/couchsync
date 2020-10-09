@@ -3,21 +3,23 @@
   "version": "0.0.1",
   "description": "Syncs your favorite streaming platforms across devices",
   "browser_action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "favicon.ico",
-      "32": "favicon.ico",
-      "48": "favicon.ico",
-      "128": "favicon.ico",
-      "512": "logo512.png"
-    }
+    "default_popup": "popup.html"
   },
+  "permissions": [
+    "declarativeContent",
+    "storage",
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://youtube.com/watch"],
+      "js": ["static/js/index.f4d76693.efc1d870.chunk.js"]
+    }
+  ],
   "icons": {
-    "16": "favicon.ico",
-    "32": "favicon.ico",
-    "48": "favicon.ico",
-    "128": "favicon.ico",
-    "512": "logo512.png"
+    "16": "icon_16.png",
+    "48": "icon_48.png",
+    "128": "icon_128.png"
   },
   "manifest_version": 2
 }
