@@ -12,8 +12,9 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://youtube.com/watch"],
-      "js": ["static/js/index.f4d76693.efc1d870.chunk.js"]
+      "matches": ["<all_urls>"],
+      "css": ["/static/css/main.css"],
+      "js": ["/static/js/0.chunk.js", "static/js/content.js"]
     }
   ],
   "icons": {
