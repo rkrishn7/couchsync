@@ -1,7 +1,7 @@
 #!/bin/bash
 
 build() {
-  echo 'building plugin 👽'
+  echo 'building unpacked plugin 👽'
 
   rm -rf build/*
 

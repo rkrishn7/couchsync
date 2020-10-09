@@ -62,7 +62,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "./build-scripts/build.sh",
+    "build": "./scripts/custom-build.sh",
     "test": "node scripts/test.js",
     "format": "prettier --write src/**/*.ts{,x}",
     "lint": "eslint src/**/*.ts{,x}"
