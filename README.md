@@ -8,16 +8,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `yarn start`
+### `yarn watch`
 
 Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You'll need to load the unpacked plugin into Chrome. Follow the steps in the **`yarn build`** section.<br />
+After this, hot reloading should be enabled so simply make the changes you need and watch the magic happen!<br />
+You might need to reload the page and/or close and open the extension popup again.<br />
+This means you won't need to build the plugin and refresh everytime you make a change!<br />
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-Even though we're building a browser extension, hot reloading makes it easy to inspect changes fast.<br />
-Use this feature to facilitate rapid development.
+You can thank me later 😁
 
 ### `yarn test`
 
@@ -36,21 +35,30 @@ After you've built the plugin, Take to the following steps to enable it in **Chr
 - Click "Load Unpacked" to load the unpacked plugin build
 - Open the *build* folder the script produced
 
+For a production build, you'll need to rename the chunk in manifest.json to the outputted chunk by webpack. Need a better solution, but this works for now.
+
 That's it! You should see the plugin icon where the rest of the extensions live. If you need to build again, click the plugin's refresh button on the extensions page after doing so.
 
 ### `yarn eject`
 
 **DO NOT USE THIS COMMAND**
 
-I'm keeping the info here because I might want to modify the webpack config later, but there's no need to use this right now.
+I've already ejected to modify the webpack config, this command will do nothing.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### `yarn start`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Deprecated. Replaced with `yarn watch`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Developing
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+We're using [emotion](https://emotion.sh/docs/introduction) and [rebass](https://rebassjs.org/getting-started) to build components.<br />
+rebass is a robust library that is easy to extend using emotion.<br />
+
+**A few guidelines:**
+
+- Please write all CSS in the Javascript files. emotion makes this easy.
+- Add generic components to the `src/components/` folder.
+- We'll be using [Redux](https://redux.js.org/) as our centralized state container. Please reduce boilerplate.
 
 ## Learn More
 
