@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import App from './index';
+import Popup from './index';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('renders brand', () => {
+  const { getByText } = render(<Popup />);
+  const brand = getByText(/Couch Sync/i);
+  expect(brand).toBeInTheDocument();
 });
