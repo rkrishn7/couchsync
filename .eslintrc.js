@@ -34,6 +34,9 @@ module.exports = {
     'linebreak-style': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
+    '@typescript-eslint/no-loop-func': 'off',
+    '@typescript-eslint/no-redeclare': 'off',
+    '@typescript-eslint/no-shadow': 'off',
     'no-use-before-define': 'off',
     'no-empty': 0,
     'no-unused-vars': 'off',
@@ -73,7 +76,8 @@ module.exports = {
         'singleQuote': true,
         'trailingComma': 'es5',
         'bracketSpacing': true,
-        'jsxBracketSameLine': true
+        'jsxBracketSameLine': true,
+        'arrowParens': 'avoid',
       }
     ],
     'react-hooks/rules-of-hooks': 'error',
