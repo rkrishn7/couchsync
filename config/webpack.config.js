@@ -22,7 +22,6 @@ const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
-const ChromeExtensionReloader  = require('webpack-chrome-extension-reloader');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 
@@ -510,14 +509,6 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
-      new ChromeExtensionReloader({
-        port: 9090, // Which port use to create the server
-        reloadPage: true, // Force the reload of the page also
-        entries: { // The entries used for the content/background scripts
-          content: 'content', // Use the entry names, not the file name or the path
-          main: 'main' // *REQUIRED
-        }
-      }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
