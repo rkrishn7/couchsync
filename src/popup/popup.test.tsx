@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Popup from './index';
+import Popup from './popup';
 
 test('renders brand', () => {
   const { getByText } = render(<Popup />);
