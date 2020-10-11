@@ -24,7 +24,8 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-const ExtensionReloader  = require('webpack-extension-reloader');
+const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -167,6 +168,7 @@ module.exports = function(webpackEnv) {
       // changing JS code would still trigger a refresh.
       // ].filter(Boolean),
       contentScript: paths.contentScriptIndexJs,
+      background: paths.backgroundJs,
     },
     output: {
       // The build folder.
@@ -299,6 +301,10 @@ module.exports = function(webpackEnv) {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
+        // Added for path aliases
+        '@root': paths.appSrc,
+        '@popup': paths.appSrc + '/popup/',
+        '@contentScript': paths.appSrc + '/content-script/',
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile && {
           'react-dom$': 'react-dom/profiling',
@@ -515,8 +521,14 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
-      isEnvDevelopment && new ExtensionReloader({
-        reloadPage: true, // Force the reload of the page also
+      isEnvDevelopment && new CleanWebpackPlugin({
+        verbose: true,
+        cleanStaleWebpackAssets: true,
+        cleanAfterEveryBuildPatterns: [
+          '*.hot-update.json',
+          '*.hot-update.js',
+          '*.hot-update.js.map'
+        ]
       }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
@@ -527,7 +539,7 @@ module.exports = function(webpackEnv) {
             template: paths.appHtml,
             // DO NOT REMOVE
             // Added by Rohan. We need to exclude this chunk from the resulting HTML popup file.
-            excludeChunks: ['contentScript'],
+            excludeChunks: ['contentScript', 'background'],
           },
           isEnvProduction
             ? {
@@ -661,6 +673,13 @@ module.exports = function(webpackEnv) {
           silent: true,
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
+        }),
+        isEnvDevelopment && new ChromeExtensionReloader({
+          reloadPage: true,
+          entries: {
+            background: 'background',
+            contentScript: 'contentScript',
+          }
         }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.

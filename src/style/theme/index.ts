@@ -9,9 +9,9 @@ const theme = {
     highlight: 'hsla(205, 100%, 40%, 0.125)',
   },
   fonts: {
-    body: 'system-ui, sans-serif',
+    body: 'Poppins, sans-serif',
     heading: 'Poppins, sans-serif',
-    monospace: 'Menlo, monospace',
+    monospace: 'Poppins, sans-serif',
   },
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontWeights: {

@@ -1,11 +1,14 @@
 import React from 'react';
 import './index.css';
 import ReactDOM from 'react-dom';
+import { ThemeProvider } from 'emotion-theming';
+import theme from '@root/style/theme';
+import { MessageBar } from '@contentScript/components/message-bar';
 
 const Main: React.FC = () => (
-  <div style={{ padding: '20px' }}>
-    <h1>Playback Sync</h1>
-  </div>
+  <ThemeProvider theme={theme}>
+    <MessageBar />
+  </ThemeProvider>
 );
 
 const app = document.createElement('div');
