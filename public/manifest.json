@@ -14,7 +14,7 @@
     {
       "matches": ["*://*.youtube.com/watch*"],
       "css": ["/static/css/content.css"],
-      "js": ["/static/js/0.chunk.js", "/static/js/1.chunk.js", "static/js/content.js"]
+      "js": ["static/js/content.js"]
     }
   ],
   "icons": {
