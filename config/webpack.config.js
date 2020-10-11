@@ -145,7 +145,8 @@ module.exports = function(webpackEnv) {
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
     entry: {
-      main: [
+      popup: paths.popupIndexJs,
+      // [
       // Include an alternative client for WebpackDevServer. A client's job is to
       // connect to WebpackDevServer by a socket and get notified about changes.
       // When you save a file, the client will either apply hot updates (in case
@@ -160,12 +161,12 @@ module.exports = function(webpackEnv) {
       // isEnvDevelopment &&
       //   require.resolve('react-dev-utils/webpackHotDevClient'),
       // Finally, this is your app's code:
-      paths.appIndexJs,
+      // paths.appIndexJs,
       // We include the app code last so that if there is a runtime error during
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
-      ].filter(Boolean),
-      content: './src/content-script/index.tsx',
+      // ].filter(Boolean),
+      contentScript: paths.contentScriptIndexJs,
     },
     output: {
       // The build folder.
@@ -526,7 +527,7 @@ module.exports = function(webpackEnv) {
             template: paths.appHtml,
             // DO NOT REMOVE
             // Added by Rohan. We need to exclude this chunk from the resulting HTML popup file.
-            excludeChunks: ['content'],
+            excludeChunks: ['contentScript'],
           },
           isEnvProduction
             ? {
@@ -600,7 +601,7 @@ module.exports = function(webpackEnv) {
             manifest[file.name] = file.path;
             return manifest;
           }, seed);
-          const entrypointFiles = entrypoints.main.filter(
+          const entrypointFiles = entrypoints.popup.filter(
             fileName => !fileName.endsWith('.map')
           );
 
