@@ -32,12 +32,10 @@ After you've built the plugin, Take to the following steps to enable it in **Chr
 
 - Navigate to the [extensions](chrome://extensions) page
 - Enable *Developer Mode* in the upper right hand corner of the page
-- Click "Load Unpacked" to load the unpacked plugin build
+- Click "Load Unpacked" to load the unpacked plugin build (or load a bundled one)
 - Open the *build* folder the script produced
 
-For a production build, you'll need to rename the chunk in manifest.json to the outputted chunk by webpack. Need a better solution, but this works for now.
-
-That's it! You should see the plugin icon where the rest of the extensions live. If you need to build again, click the plugin's refresh button on the extensions page after doing so.
+That's it! You should see the plugin icon where the rest of the extensions live. You'll need to pin the plugin too see it on the extensions bar. If you need to build again, click the plugin's refresh button on the extensions page after doing so.
 
 ### `yarn eject`
 
