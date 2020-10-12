@@ -14,11 +14,25 @@ code {
 
 #extension-panel-root {
   width: 400px;
-  height: 100%;
   position: fixed;
-  top: 0px;
+  bottom: 0px;
   right: 0px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 10px;
   z-index: 2147483647;
-  background-color: white;
-  box-shadow: 0px 0px 5px #0000009e;
+}
+
+.react-toast-notifications__container {
+  z-index: 2147483647 !important;
+}
+
+.react-toast-notifications__toast--success {
+  background-color: rgba(51, 0, 204, 0.7) !important;
+  color: white !important;
+}
+
+.react-toast-notifications__toast__icon-wrapper {
+  background-color: rgba(51, 0, 204, 1) !important;
 }

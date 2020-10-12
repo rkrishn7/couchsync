@@ -5,7 +5,6 @@ const configFactory = require('../config/webpack.config');
 const config = configFactory('development');
 
 config.output.path = paths.appBuild;
-paths.publicUrl = paths.appBuild + '/';
 
 webpack(config).watch({}, (err, stats) => {
   if (err) {
@@ -27,10 +26,6 @@ function copyPublicFolder() {
     filter: file => file !== paths.appHtml,
   });
   // Rename HTML
-  fs.renameSync(paths.appBuild + '/index.html', paths.appBuild + '/popup.html');
-  // Rename JS files for consistency
-  // I don't know why the chunks have different name for prod vs dev builds.
-  // Not working because popup.html still references the old chunk. 
-  // fs.renameSync(paths.appBuild + '/static/js/1.chunk.js', paths.appBuild + '/static/js/3.chunk.js');
-  // fs.renameSync(paths.appBuild + '/static/js/1.chunk.js.map', paths.appBuild + '/static/js/3.chunk.js.map');
+  if (fs.existsSync(paths.appBuild + '/index.html'))
+    fs.renameSync(paths.appBuild + '/index.html', paths.appBuild + '/popup.html');
 }
