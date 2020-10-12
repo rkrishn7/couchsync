@@ -33,6 +33,7 @@ module.exports = {
   rules: {
     'linebreak-style': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     '@typescript-eslint/no-loop-func': 'off',
     '@typescript-eslint/no-redeclare': 'off',

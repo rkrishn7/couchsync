@@ -19,7 +19,7 @@ const Root = styled(Box)`
 const Backing = styled(Card)`
   width: 100%;
   height: 100%;
-  border-radius: ${p => p.theme.radii.default}px;
+  border-radius: ${p => p.theme.radii[1]}px;
   display: flex;
   flex-direction: column;
   padding: ${p => p.theme.space[2]}px;
