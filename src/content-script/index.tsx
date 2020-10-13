@@ -5,8 +5,11 @@ import { ThemeProvider } from 'emotion-theming';
 import theme from '@root/style/theme';
 import { MessageBar } from '@contentScript/components/message-bar';
 import store from '@contentScript/store';
+import { initRuntimeListeners } from '@contentScript/runtime-listeners';
 import { ToastProvider } from 'react-toast-notifications';
 import { Provider as ReduxProvider } from 'react-redux';
+
+initRuntimeListeners();
 
 const Main: React.FC = () => (
   <ReduxProvider store={store}>

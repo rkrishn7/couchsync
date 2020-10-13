@@ -8,16 +8,21 @@
   "permissions": [
     "declarativeContent",
     "storage",
-    "activeTab"
+    "activeTab",
+    "tabs",
+    "webNavigation",
+    "http://*/",
+    "https://*/"
   ],
   "background": {
-    "scripts": ["static/js/background.js"]
+    "scripts": ["static/js/background.js"],
+    "persistent": false
   },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/watch*"],
       "css": ["/static/css/contentScript.css"],
-      "js": ["static/js/contentScript.js"]
+      "js": ["/static/js/contentScript.js"]
     }
   ],
   "icons": {
