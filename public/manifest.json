@@ -20,7 +20,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.youtube.com/watch*"],
+      "matches": ["*://*.netflix.com/watch*"],
       "css": ["/static/css/contentScript.css"],
       "js": ["/static/js/contentScript.js"]
     }

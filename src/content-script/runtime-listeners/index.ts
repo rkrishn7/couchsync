@@ -1,7 +1,12 @@
-import { CONTENT_SCRIPT_ENABLED_REQUEST, CONTENT_SCRIPT_ENABLED_RESPONSE } from '@root/constants/chrome';
+import { HIDE_CONTENT_SCRIPT_HTML } from '@root/lib/constants/chrome';
 
-export const initRuntimeListeners = () => {
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message === CONTENT_SCRIPT_ENABLED_REQUEST) sendResponse(CONTENT_SCRIPT_ENABLED_RESPONSE);
-  });
-};
+import { hideContentScriptHtml } from './handlers';
+
+chrome.runtime.onMessage.addListener(message => {
+  switch (message.name) {
+    case HIDE_CONTENT_SCRIPT_HTML:
+      hideContentScriptHtml();
+      break;
+    default:
+  }
+});

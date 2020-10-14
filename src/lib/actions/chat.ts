@@ -1,4 +1,4 @@
-import * as Constants from '@contentScript/constants/chat';
+import * as Constants from '@root/lib/constants/chat';
 
 export const sendMessage = (content: string) => {
   return {

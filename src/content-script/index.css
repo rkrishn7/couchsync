@@ -13,7 +13,6 @@ code {
 }
 
 #extension-panel-root {
-  width: 400px;
   position: fixed;
   bottom: 0px;
   right: 0px;

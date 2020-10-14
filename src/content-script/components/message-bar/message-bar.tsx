@@ -7,8 +7,8 @@ import { faPaperPlane, faLaughBeam, faBellSlash, faTimes } from '@fortawesome/fr
 import { useToasts } from 'react-toast-notifications';
 
 import { connect, ConnectedProps } from 'react-redux';
-import { sendMessage } from '@contentScript/actions/chat';
-import { StoreState } from '@contentScript/store';
+import { sendMessage } from '@root/lib/actions/chat';
+import { StoreState } from '@root/lib/store';
 
 const ChatContainer = styled(Card)`
   min-width: 300px;

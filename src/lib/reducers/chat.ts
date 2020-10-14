@@ -1,10 +1,10 @@
-import * as Constants from '@contentScript/constants/chat';
+import * as Actions from '@root/lib/constants/chat';
 
 interface ChatState {
   messages: any[];
 }
 
-type Action = { type: keyof typeof Constants } & Record<string, any>;
+type Action = { type: keyof typeof Actions } & Record<string, any>;
 
 const initialState: ChatState = {
   messages: [],
@@ -12,7 +12,7 @@ const initialState: ChatState = {
 
 const messages = (state: ChatState = initialState, action: Action) => {
   switch (action.type) {
-    case Constants.SEND_MESSAGE:
+    case Actions.SEND_MESSAGE:
       return {
         messages: [...state.messages, action.message],
       };

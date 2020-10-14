@@ -30,6 +30,28 @@ const BrandContainer = styled(Flex)`
   align-items: center;
 `;
 
+const TestButton = styled.button`
+  width: 30px;
+  height: 30px;
+  margin-right: 3px;
+  margin-left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: pink;
+  border: none;
+  outline: none;
+  color: #909090;
+  transition: all 0.2s ease-in-out;
+  &:active {
+    transform: scale(0.9);
+  }
+  &:hover {
+    cursor: pointer;
+    color: ${p => p.theme.colors.secondary};
+  }
+`;
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -37,6 +59,7 @@ function App() {
         <Backing>
           <BrandContainer>
             <Heading color="primary">Couch Sync</Heading>
+            <TestButton>Show Chat</TestButton>
           </BrandContainer>
         </Backing>
       </Root>
