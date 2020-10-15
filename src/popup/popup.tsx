@@ -1,9 +1,12 @@
 import React from 'react';
 import { ThemeProvider } from 'emotion-theming';
 import { Box, Card, Flex, Heading } from 'rebass';
+import { toggleChat } from '@contentScript/actions/chat';
+import { ChromeRuntimeMessages } from '@root/lib/constants';
 import styled from '../style/styled';
 import theme from '../style/theme';
 import './popup.css';
+import store from './store';
 
 const Root = styled(Box)`
   background-color: ${p => p.theme.colors.muted};
@@ -52,6 +55,27 @@ const TestButton = styled.button`
   }
 `;
 
+/*
+chrome.runtime.onMessage.addListener(message => {
+  if (message.name === 'oopsie') {
+    console.log('Popup: received toggle chat');
+  }
+});
+*/
+
+/**
+ * @see https://developer.chrome.com/apps/messaging
+ */
+const handleToggleChat = () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    if (tabs[0] && tabs[0].id) {
+      chrome.tabs.sendMessage(tabs[0].id, { name: ChromeRuntimeMessages.TOGGLE_CHAT }, () => {
+        store.dispatch(toggleChat());
+      });
+    }
+  });
+};
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -59,7 +83,7 @@ function App() {
         <Backing>
           <BrandContainer>
             <Heading color="primary">Couch Sync</Heading>
-            <TestButton>Show Chat</TestButton>
+            <TestButton onClick={handleToggleChat}>Show Chat</TestButton>
           </BrandContainer>
         </Backing>
       </Root>

@@ -7,8 +7,8 @@ import { faPaperPlane, faLaughBeam, faBellSlash, faTimes } from '@fortawesome/fr
 import { useToasts } from 'react-toast-notifications';
 
 import { connect, ConnectedProps } from 'react-redux';
-import { sendMessage } from '@root/lib/actions/chat';
-import { StoreState } from '@root/lib/store';
+import { sendMessage } from '@contentScript/actions/chat';
+import { StoreState } from '@contentScript/store';
 
 const ChatContainer = styled(Card)`
   min-width: 300px;
@@ -53,6 +53,7 @@ const ToolbarButton = styled.button`
 const mapState = (state: StoreState) => {
   return {
     messages: state.chat.messages,
+    chatEnabled: state.chat.enabled,
   };
 };
 
@@ -64,7 +65,7 @@ const connector = connect(mapState, mapDispatch);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const MessageBar: React.FC<ReduxProps> = ({ messages, sendMessage }) => {
+const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, messages, sendMessage }) => {
   const { addToast, removeAllToasts } = useToasts();
   const [message, setMessage] = useState<string | null>(null);
 
@@ -83,7 +84,7 @@ const MessageBar: React.FC<ReduxProps> = ({ messages, sendMessage }) => {
     setMessage(event.target.value);
   };
 
-  return (
+  return !chatEnabled ? null : (
     <ChatContainer>
       <Flex flexDirection="column">
         <ChatInput placeholder="send a message..." onChange={handleInputChange} />

@@ -12,14 +12,10 @@ code {
     monospace;
 }
 
-#extension-panel-root {
+#couch-sync-extension__root {
+  right: 5%;
+  bottom: 5%;
   position: fixed;
-  bottom: 0px;
-  right: 0px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  padding: 10px;
   z-index: 2147483647;
 }
 

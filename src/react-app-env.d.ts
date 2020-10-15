@@ -8,6 +8,11 @@ declare global {
   export interface Window {
     COUCH_SYNC_CONTENT_SCRIPT_ENABLED: boolean;
   }
+
+  export interface History {
+    onPushState: ({ state }: { state: any }) => void;
+    onReplaceState: ({ state }: { state: any }) => void;
+  }
 }
 
 declare namespace chrome.tabs {
