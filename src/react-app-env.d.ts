@@ -2,19 +2,6 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
-import { CONTENT_SCRIPT_ENABLED_RESPONSE } from './lib/constants/chrome';
-
-declare global {
-  export interface Window {
-    COUCH_SYNC_CONTENT_SCRIPT_ENABLED: boolean;
-  }
-
-  export interface History {
-    onPushState: ({ state }: { state: any }) => void;
-    onReplaceState: ({ state }: { state: any }) => void;
-  }
-}
-
 declare namespace chrome.tabs {
   export function sendMessage(tabId: number, message: chrome.runtime.RuntimeMessage, responseCallback?: (response: chrome.runtime.RuntimeMessage) => void): void;
 }
