@@ -5,6 +5,7 @@ export const sendMessage = (content: string) => {
     type: ChatActions.SEND_MESSAGE,
     message: {
       content,
+      isOwnMessage: !!Math.round(Math.random()),
       timestamp: Date.now(),
     },
   };

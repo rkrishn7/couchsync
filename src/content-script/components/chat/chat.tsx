@@ -11,8 +11,8 @@ import { MessageList } from '@contentScript/components/message-list';
 import { toggleChat } from '@contentScript/actions/chat';
 
 const ChatContainer = styled(Card)<{ enabled: boolean }>`
-  min-width: 250px;
-  min-height: 350px;
+  width: 300px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   border-radius: ${p => p.theme.radii[2]}px;

@@ -16,6 +16,10 @@ const Cell = styled(Box)<CellProps>`
   min-height: 30px;
   width: 50%;
   border-radius: ${p => p.theme.radii[2]}px;
+  border-top-left-radius: ${p => (p.isOwnMessage ? p.theme.radii[2] : 0)}px;
+  border-top-right-radius: ${p => p.theme.radii[2]}px;
+  border-bottom-right-radius: ${p => (p.isOwnMessage ? 0 : p.theme.radii[2])}px;
+  border-bottom-left-radius: ${p => p.theme.radii[2]}px;
   background-color: ${p => (p.isOwnMessage ? p.theme.colors.secondary : p.theme.colors.primary)};
   padding: 5px;
   font-size: 14px;

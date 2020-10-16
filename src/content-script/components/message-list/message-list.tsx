@@ -9,6 +9,7 @@ import { MessageCell } from '@contentScript/components/message-cell';
 const Container = styled(Flex)`
   flex-direction: column;
   min-width: 100%;
+  overflow-y: scroll;
 `;
 
 const mapState = (state: StoreState) => {
@@ -24,8 +25,8 @@ type ReduxProps = ConnectedProps<typeof connector>;
 const MessageList: React.FC<ReduxProps> = ({ messages }) => {
   return (
     <Container>
-      {messages?.map(({ content }) => (
-        <MessageCell message={content} isOwnMessage />
+      {messages?.map(({ content, isOwnMessage }) => (
+        <MessageCell message={content} isOwnMessage={isOwnMessage} />
       ))}
     </Container>
   );

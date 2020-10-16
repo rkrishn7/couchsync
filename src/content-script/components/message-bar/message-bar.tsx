@@ -10,7 +10,6 @@ import { sendMessage } from '@contentScript/actions/chat';
 import { StoreState } from '@contentScript/store';
 
 const Container = styled(Card)`
-  min-width: 300px;
   padding-bottom: 2px;
   border-radius: ${p => p.theme.radii[2]}px;
   border: 0.5px solid ${p => p.theme.colors.grey};
