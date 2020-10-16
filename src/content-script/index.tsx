@@ -3,7 +3,7 @@ import './index.css';
 import ReactDOM from 'react-dom';
 import { ThemeProvider } from 'emotion-theming';
 import theme from '@root/style/theme';
-import { MessageBar } from '@contentScript/components/message-bar';
+import { Chat } from '@contentScript/components/chat';
 import store from '@contentScript/store';
 import '@contentScript/listeners';
 import { ToastProvider } from 'react-toast-notifications';
@@ -13,7 +13,7 @@ const Main: React.FC = () => (
   <ReduxProvider store={store}>
     <ThemeProvider theme={theme}>
       <ToastProvider placement="top-right" autoDismiss autoDismissTimeout={2000}>
-        <MessageBar />
+        <Chat />
       </ToastProvider>
     </ThemeProvider>
   </ReduxProvider>
