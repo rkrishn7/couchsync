@@ -1,11 +1,18 @@
-import * as Constants from '@contentScript/constants/chat';
+import { ChatActions } from '@root/lib/constants/chat';
 
 export const sendMessage = (content: string) => {
   return {
-    type: Constants.SEND_MESSAGE,
+    type: ChatActions.SEND_MESSAGE,
     message: {
       content,
+      isOwnMessage: !!Math.round(Math.random()),
       timestamp: Date.now(),
     },
+  };
+};
+
+export const toggleChat = () => {
+  return {
+    type: ChatActions.TOGGLE_CHAT,
   };
 };

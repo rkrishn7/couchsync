@@ -1,9 +1,17 @@
 import React from 'react';
 import { ThemeProvider } from 'emotion-theming';
-import { Box, Card, Flex, Heading } from 'rebass';
-import styled from '../style/styled';
-import theme from '../style/theme';
+import { Box, Card } from 'rebass';
+import { Provider as ReduxProvider } from 'react-redux';
+
+import { Brand } from '@root/components/brand';
+import styled from '@root/style/styled';
+import theme from '@root/style/theme';
+
+import { Entry } from '@popup/views/entry';
+// import '@popup/listeners';
+import '@popup/setup';
 import './popup.css';
+import store from './store';
 
 const Root = styled(Box)`
   background-color: ${p => p.theme.colors.muted};
@@ -25,22 +33,18 @@ const Backing = styled(Card)`
   padding: ${p => p.theme.space[2]}px;
 `;
 
-const BrandContainer = styled(Flex)`
-  justify-content: center;
-  align-items: center;
-`;
-
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <Root>
-        <Backing>
-          <BrandContainer>
-            <Heading color="primary">Couch Sync</Heading>
-          </BrandContainer>
-        </Backing>
-      </Root>
-    </ThemeProvider>
+    <ReduxProvider store={store}>
+      <ThemeProvider theme={theme}>
+        <Root>
+          <Backing>
+            <Brand mb={2} color="secondary" />
+            <Entry />
+          </Backing>
+        </Root>
+      </ThemeProvider>
+    </ReduxProvider>
   );
 }
 

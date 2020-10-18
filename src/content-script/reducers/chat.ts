@@ -1,20 +1,28 @@
-import * as Constants from '@contentScript/constants/chat';
+import { ChatActions } from '@root/lib/constants/chat';
 
-interface ChatState {
+export interface ChatState {
   messages: any[];
+  enabled: boolean;
 }
 
-type Action = { type: keyof typeof Constants } & Record<string, any>;
+type Action = { type: ChatActions } & Record<string, any>;
 
 const initialState: ChatState = {
   messages: [],
+  enabled: false,
 };
 
 const messages = (state: ChatState = initialState, action: Action) => {
   switch (action.type) {
-    case Constants.SEND_MESSAGE:
+    case ChatActions.SEND_MESSAGE:
       return {
+        ...state,
         messages: [...state.messages, action.message],
+      };
+    case ChatActions.TOGGLE_CHAT:
+      return {
+        ...state,
+        enabled: !state.enabled,
       };
     default:
       return state;
