@@ -49,6 +49,7 @@ const ChatIcon = styled(FontAwesomeIcon)<{ chatEnabled: boolean }>`
 const mapState = (state: StoreState) => {
   return {
     chatEnabled: state.chat.enabled,
+    roomId: state.party.roomId,
   };
 };
 
@@ -60,8 +61,8 @@ const connector = connect(mapState, mapDispatch);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const Chat: React.FC<ReduxProps> = ({ chatEnabled, toggleChat }) => {
-  return (
+const Chat: React.FC<ReduxProps> = ({ chatEnabled, roomId, toggleChat }) => {
+  return !roomId ? null : (
     <Flex flexDirection="column" alignItems="flex-end">
       {chatEnabled && (
         <ChatContainer enabled={chatEnabled}>

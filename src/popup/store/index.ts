@@ -5,7 +5,6 @@ import * as reducers from '@popup/reducers';
 
 const rootReducer = combineReducers(reducers);
 
-// Middleware
 const logger = createLogger();
 
 export default createStore(rootReducer, applyMiddleware(logger, thunk));

@@ -1,6 +1,7 @@
 import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
+import { setRoomId, setJoinUrl } from '@contentScript/actions/party';
 import store from '@contentScript/store';
 
 /**
@@ -61,6 +62,7 @@ function teardown() {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  const storeState = store.getState();
   switch (message.name) {
     case ChromeRuntimeMessages.HIDE_CONTENT_SCRIPT_HTML:
       teardown();
@@ -68,6 +70,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     case ChromeRuntimeMessages.TOGGLE_CHAT:
       store.dispatch(toggleChat());
       sendResponse();
+      break;
+    case ChromeRuntimeMessages.GET_PARTY_DETAILS:
+      sendResponse({ data: { roomId: storeState.party.roomId, joinUrl: storeState.party.joinUrl } });
+      break;
+    case ChromeRuntimeMessages.SET_PARTY_DETAILS:
+      const { roomId, joinUrl } = message.data!;
+      if (roomId) store.dispatch(setRoomId(roomId));
+      if (joinUrl) store.dispatch(setJoinUrl(joinUrl));
       break;
     default:
   }

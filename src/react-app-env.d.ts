@@ -12,9 +12,9 @@ declare namespace chrome.runtime {
     data?: Record<string, any>;
   }
 
-  export type ListenerHandler = (message: chrome.runtime.RuntimeMessage, sender: chrome.runtime.MessageSender, sendResponse: (response?: chrome.runtime.RuntimeMessage | undefined) => void) => void
+  export type ListenerHandler = (message: chrome.runtime.RuntimeMessage, sender: chrome.runtime.MessageSender, sendResponse: (response?: Pick<chrome.runtime.RuntimeMessage, 'data'>) => void) => void
 
-  export function sendMessage(message: RuntimeMessage, responseCallback?: (response: chrome.runtime.RuntimeMessage) => void): void;
+  export function sendMessage(message: RuntimeMessage, responseCallback?: (response?: Pick<chrome.runtime.RuntimeMessage, 'data'>) => void): void;
   export interface ExtensionMessageEvent {
     addListener(callback: ListenerHandler): void;
   }

@@ -1,13 +1,8 @@
-import { PopupActions } from '@root/lib/constants/popup';
+import { PopupActions, PopupViews } from '@root/lib/constants/popup';
 
-export const enablePopup = () => {
+export const setPopupView = (view: PopupViews) => {
   return {
-    type: PopupActions.ENABLE_POPUP,
-  };
-};
-
-export const disablePopup = () => {
-  return {
-    type: PopupActions.DISABLE_POPUP,
+    type: PopupActions.SET_POPUP_VIEW,
+    view,
   };
 };

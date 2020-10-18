@@ -32,6 +32,7 @@ module.exports = {
   },
   rules: {
     'linebreak-style': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'typescript-eslint/ban-ts-comment': 'off',
@@ -40,6 +41,7 @@ module.exports = {
     '@typescript-eslint/no-redeclare': 'off',
     '@typescript-eslint/no-shadow': 'off',
     'no-use-before-define': 'off',
+    'no-case-declarations': 'off',
     'no-empty': 0,
     'no-unused-vars': 'off',
     'no-console': 'off',

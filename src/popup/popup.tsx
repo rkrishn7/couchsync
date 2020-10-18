@@ -2,14 +2,14 @@ import React from 'react';
 import { ThemeProvider } from 'emotion-theming';
 import { Box, Card } from 'rebass';
 import { Provider as ReduxProvider } from 'react-redux';
-import { enablePopup } from '@popup/actions/popup';
-import { ChromeRuntimeMessages } from '@root/lib/constants';
+
 import { Brand } from '@root/components/brand';
-import { isValidExtensionUrl } from '@root/lib/utils';
-import { Entry } from '@popup/views/entry';
 import styled from '@root/style/styled';
 import theme from '@root/style/theme';
-import '@popup/listeners';
+
+import { Entry } from '@popup/views/entry';
+// import '@popup/listeners';
+import '@popup/setup';
 import './popup.css';
 import store from './store';
 
@@ -32,18 +32,6 @@ const Backing = styled(Card)`
   flex-direction: column;
   padding: ${p => p.theme.space[2]}px;
 `;
-
-/**
- * Enable the popup
- * @see https://developer.chrome.com/apps/messaging
- */
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  if (tabs[0] && isValidExtensionUrl(tabs[0].url!)) {
-    chrome.tabs.sendMessage(tabs[0].id!, { name: ChromeRuntimeMessages.ENABLE_POPUP_INTERACTION }, () => {
-      store.dispatch(enablePopup());
-    });
-  }
-});
 
 function App() {
   return (

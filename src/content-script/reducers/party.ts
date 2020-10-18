@@ -16,13 +16,10 @@ const initialState: PartyState = {
 
 const party = (state: PartyState = initialState, action: Action) => {
   switch (action.type) {
-    case PartyActions.JOIN_PARTY:
-      return state;
-    case PartyActions.CREATE_PARTY:
+    case PartyActions.SET_ROOM_ID:
       return {
         ...state,
         roomId: action.roomId,
-        isHost: true,
       };
     case PartyActions.SET_JOIN_URL:
       return {
