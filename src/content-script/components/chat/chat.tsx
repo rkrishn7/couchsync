@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Flex } from 'rebass';
 import styled from '@root/style/styled';
+import { Brand } from '@root/components/brand';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,6 +17,7 @@ const ChatContainer = styled(Card)<{ enabled: boolean }>`
   display: flex;
   flex-direction: column;
   border-radius: ${p => p.theme.radii[2]}px;
+  border: 2px solid ${p => p.theme.colors.greyLight};
 `;
 
 const ChatButton = styled.button`
@@ -63,7 +65,8 @@ const Chat: React.FC<ReduxProps> = ({ chatEnabled, toggleChat }) => {
     <Flex flexDirection="column" alignItems="flex-end">
       {chatEnabled && (
         <ChatContainer enabled={chatEnabled}>
-          <Flex flex={3}>
+          <Brand mb={2} color="secondary" />
+          <Flex flex={3} overflowY="scroll">
             <MessageList />
           </Flex>
           <MessageBar />

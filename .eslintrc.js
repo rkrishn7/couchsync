@@ -58,6 +58,7 @@ module.exports = {
     'react/require-default-props': 0,
     'react/sort-comp': 0,
     'react/prop-types': 0,
+    'react/jsx-props-no-spreading': 'off',
     'react/jsx-closing-bracket-location': 0,
     'react/forbid-prop-types': 0,
     'react/destructuring-assignment': 0,

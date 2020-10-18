@@ -1,10 +1,15 @@
 import React from 'react';
 import { ThemeProvider } from 'emotion-theming';
-import { Box, Card, Flex, Heading } from 'rebass';
-import { toggleChat } from '@contentScript/actions/chat';
+import { Box, Card } from 'rebass';
+import { Provider as ReduxProvider } from 'react-redux';
+import { enablePopup } from '@popup/actions/popup';
 import { ChromeRuntimeMessages } from '@root/lib/constants';
-import styled from '../style/styled';
-import theme from '../style/theme';
+import { Brand } from '@root/components/brand';
+import { isValidExtensionUrl } from '@root/lib/utils';
+import { Entry } from '@popup/views/entry';
+import styled from '@root/style/styled';
+import theme from '@root/style/theme';
+import '@popup/listeners';
 import './popup.css';
 import store from './store';
 
@@ -28,66 +33,30 @@ const Backing = styled(Card)`
   padding: ${p => p.theme.space[2]}px;
 `;
 
-const BrandContainer = styled(Flex)`
-  justify-content: center;
-  align-items: center;
-`;
-
-const TestButton = styled.button`
-  width: 30px;
-  height: 30px;
-  margin-right: 3px;
-  margin-left: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: pink;
-  border: none;
-  outline: none;
-  color: #909090;
-  transition: all 0.2s ease-in-out;
-  &:active {
-    transform: scale(0.9);
-  }
-  &:hover {
-    cursor: pointer;
-    color: ${p => p.theme.colors.secondary};
-  }
-`;
-
-/*
-chrome.runtime.onMessage.addListener(message => {
-  if (message.name === 'oopsie') {
-    console.log('Popup: received toggle chat');
-  }
-});
-*/
-
 /**
+ * Enable the popup
  * @see https://developer.chrome.com/apps/messaging
  */
-const handleToggleChat = () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    if (tabs[0] && tabs[0].id) {
-      chrome.tabs.sendMessage(tabs[0].id, { name: ChromeRuntimeMessages.TOGGLE_CHAT }, () => {
-        store.dispatch(toggleChat());
-      });
-    }
-  });
-};
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  if (tabs[0] && isValidExtensionUrl(tabs[0].url!)) {
+    chrome.tabs.sendMessage(tabs[0].id!, { name: ChromeRuntimeMessages.ENABLE_POPUP_INTERACTION }, () => {
+      store.dispatch(enablePopup());
+    });
+  }
+});
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <Root>
-        <Backing>
-          <BrandContainer>
-            <Heading color="primary">Couch Sync</Heading>
-            <TestButton onClick={handleToggleChat}>Show Chat</TestButton>
-          </BrandContainer>
-        </Backing>
-      </Root>
-    </ThemeProvider>
+    <ReduxProvider store={store}>
+      <ThemeProvider theme={theme}>
+        <Root>
+          <Backing>
+            <Brand mb={2} color="secondary" />
+            <Entry />
+          </Backing>
+        </Root>
+      </ThemeProvider>
+    </ReduxProvider>
   );
 }
 

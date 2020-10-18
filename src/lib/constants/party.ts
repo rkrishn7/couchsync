@@ -1,0 +1,5 @@
+export enum PartyActions {
+  JOIN_PARTY = 'JOIN_PARTY',
+  CREATE_PARTY = 'CREATE_PARTY',
+  LEAVE_PARTY = 'LEAVE_PARTY',
+}

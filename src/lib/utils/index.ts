@@ -11,3 +11,7 @@ export const inject = (fn: () => void) => {
   script.text = `(${fn.toString()})();`;
   document.documentElement.appendChild(script);
 };
+
+export const isValidExtensionUrl = (url: string) => {
+  return url.match(/^.*:\/\/.*.youtube.com\/watch.*$/);
+};
