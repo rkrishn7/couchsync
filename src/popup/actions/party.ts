@@ -7,7 +7,7 @@ import {
 } from '@root/lib/constants';
 // import { StoreState } from '@popup/store';
 import { setPopupView } from '@popup/actions/popup';
-import socket from '@popup/socket';
+import socket from '@root/lib/socket';
 import { Dispatch } from 'redux';
 
 export const setJoinUrl = (joinUrl: string | null) => {
