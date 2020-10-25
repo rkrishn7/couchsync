@@ -4,7 +4,6 @@ import styled from '@root/style/styled';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { createParty } from '@popup/actions/party';
-import { StoreState } from '@popup/store';
 
 const Container = styled(Flex)`
   flex-direction: column;
@@ -34,27 +33,20 @@ const CreatePartyButton = styled(Button)`
   }
 `;
 
-const mapState = (state: StoreState) => {
-  return {
-    roomId: state.party.roomId,
-  };
-};
-
 const mapDispatch = {
   createParty,
 };
 
-const connector = connect(mapState, mapDispatch);
+const connector = connect(null, mapDispatch);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const Party: React.FC<ReduxProps> = ({ createParty, roomId }) => {
+const Party: React.FC<ReduxProps> = ({ createParty }) => {
   return (
     <Container>
       <CreatePartyButton onClick={createParty}>
         <Text fontSize={2}>Create a Party</Text>
       </CreatePartyButton>
-      {roomId && <Text fontSize={2}>Room id: {roomId}</Text>}
     </Container>
   );
 };

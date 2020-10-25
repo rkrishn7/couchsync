@@ -3,7 +3,7 @@ import { ChromeRuntimeMessages, PopupViews } from '@root/lib/constants';
 
 import store from '@popup/store';
 import { setPopupView } from '@popup/actions/popup';
-import { setJoinUrl } from '@popup/actions/party';
+import { setJoinUrl, setPartyId, setPartyHost } from '@popup/actions/party';
 
 import queryString from 'query-string';
 
@@ -16,8 +16,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const parsed = queryString.parse(tabs[0].url!);
 
     chrome.tabs.sendMessage(tabs[0].id!, { name: ChromeRuntimeMessages.GET_PARTY_DETAILS }, ({ data }) => {
-      if (data.roomId) {
-        if (data.joinUrl) store.dispatch(setJoinUrl(data.joinUrl));
+      if (data.partyId && data.joinUrl) {
+        store.dispatch(setJoinUrl(data.joinUrl));
+        store.dispatch(setPartyId(data.partyId));
+        if (data.isHost) store.dispatch(setPartyHost());
         store.dispatch(setPopupView(PopupViews.IN_PARTY));
       } else if (parsed.couchSyncRoomId) {
         store.dispatch(setPopupView(PopupViews.JOIN_PARTY));

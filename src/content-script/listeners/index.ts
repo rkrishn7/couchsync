@@ -1,7 +1,7 @@
 import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
-import { setRoomId, setJoinUrl } from '@contentScript/actions/party';
+import { setPartyId, setJoinUrl, setPartyHost } from '@contentScript/actions/party';
 import store from '@contentScript/store';
 import '@contentScript/listeners/player';
 
@@ -73,12 +73,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       sendResponse();
       break;
     case ChromeRuntimeMessages.GET_PARTY_DETAILS:
-      sendResponse({ data: { roomId: storeState.party.roomId, joinUrl: storeState.party.joinUrl } });
+      sendResponse({
+        data: { partyId: storeState.party.id, joinUrl: storeState.party.joinUrl, isHost: storeState.party.isHost },
+      });
       break;
     case ChromeRuntimeMessages.SET_PARTY_DETAILS:
-      const { roomId, joinUrl } = message.data!;
-      if (roomId) store.dispatch(setRoomId(roomId));
-      if (joinUrl) store.dispatch(setJoinUrl(joinUrl));
+      store.dispatch(setPartyId(message.data!.partyId));
+      store.dispatch(setJoinUrl(message.data!.joinUrl));
+      if (message.data!.isHost) store.dispatch(setPartyHost());
       break;
     default:
   }

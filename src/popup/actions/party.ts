@@ -1,13 +1,7 @@
-import {
-  PartyActions,
-  SocketEvents,
-  CreatePartyResponse,
-  ChromeRuntimeMessages,
-  PopupViews,
-} from '@root/lib/constants';
-// import { StoreState } from '@popup/store';
+import { PartyActions, ChromeRuntimeMessages, PopupViews } from '@root/lib/constants';
+import http from '@root/lib/http';
+import { debug } from '@root/lib/utils';
 import { setPopupView } from '@popup/actions/popup';
-import socket from '@contentScript/socket';
 import { Dispatch } from 'redux';
 
 export const setJoinUrl = (joinUrl: string | null) => {
@@ -17,26 +11,50 @@ export const setJoinUrl = (joinUrl: string | null) => {
   };
 };
 
+export const setPartyId = (partyId: string | null) => {
+  return {
+    type: PartyActions.SET_PARTY_ID,
+    partyId,
+  };
+};
+
+export const setPartyHost = () => {
+  return {
+    type: PartyActions.SET_HOST,
+  };
+};
+
 export const createParty = () => {
   return (dispatch: Dispatch) => {
-    socket.emit(SocketEvents.CREATE_PARTY, ({ roomId }: CreatePartyResponse) => {
-      dispatch({
-        type: PartyActions.CREATE_PARTY,
-        roomId,
-      });
-      dispatch(setPopupView(PopupViews.IN_PARTY));
+    chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
+      if (tabs[0]) {
+        try {
+          const {
+            data: { partyHash, joinUrl },
+          } = await http.post('/party/create', {
+            watchUrl: tabs[0].url,
+          });
 
-      // Send message to content-script
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        if (tabs[0]) {
-          const joinUrl = `${tabs[0].url}&couchSyncRoomId=${roomId}`;
-          dispatch(setJoinUrl(joinUrl));
+          dispatch({
+            type: PartyActions.CREATE_PARTY,
+            id: partyHash,
+            joinUrl,
+          });
+          dispatch(setPopupView(PopupViews.IN_PARTY));
+
+          // Send a runtime message. Will be picked up by content-script
           chrome.tabs.sendMessage(tabs[0].id!, {
             name: ChromeRuntimeMessages.SET_PARTY_DETAILS,
-            data: { roomId, joinUrl },
+            data: {
+              partyId: partyHash,
+              joinUrl,
+              isHost: true,
+            },
           });
+        } catch (error) {
+          debug(error.message);
         }
-      });
+      }
     });
   };
 };

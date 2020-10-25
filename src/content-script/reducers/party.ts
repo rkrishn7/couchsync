@@ -1,7 +1,7 @@
 import { PartyActions } from '@root/lib/constants/party';
 
 export interface PartyState {
-  roomId: string | null;
+  id: string | null;
   isHost: boolean;
   joinUrl: string | null;
 }
@@ -9,22 +9,27 @@ export interface PartyState {
 type Action = { type: PartyActions } & Record<string, any>;
 
 const initialState: PartyState = {
-  roomId: null,
-  isHost: false,
+  id: null,
   joinUrl: null,
+  isHost: false,
 };
 
 const party = (state: PartyState = initialState, action: Action) => {
   switch (action.type) {
-    case PartyActions.SET_ROOM_ID:
+    case PartyActions.SET_PARTY_ID:
       return {
         ...state,
-        roomId: action.roomId,
+        id: action.partyId,
       };
     case PartyActions.SET_JOIN_URL:
       return {
         ...state,
         joinUrl: action.joinUrl,
+      };
+    case PartyActions.SET_HOST:
+      return {
+        ...state,
+        isHost: true,
       };
     default:
       return state;
