@@ -10,7 +10,9 @@ type Action = { type: PartyActions } & Record<string, any>;
 
 const initialState: PartyState = {
   roomId: null,
-  isHost: false,
+  // set to true for testing purposes on story about page transitions
+  // change back to false after isHost bug fixed
+  isHost: true,
   joinUrl: null,
 };
 

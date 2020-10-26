@@ -4,4 +4,5 @@ export enum PartyActions {
   LEAVE_PARTY = 'LEAVE_PARTY',
   SET_ROOM_ID = 'SET_ROOM_ID',
   SET_JOIN_URL = 'SET_JOIN_URL',
+  UPDATE_PARTY = 'UPDATE_PARTY',
 }
