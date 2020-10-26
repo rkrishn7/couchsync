@@ -3,7 +3,7 @@ export enum SocketEvents {
   SEND_MESSAGE = 'send_message',
   CONNECT = 'connect',
   CREATE_PARTY = 'create_party',
-
+  URL_CHANGE = 'url_change',
   VIDEO_PLAY = 'video_play',
   VIDEO_PAUSE = 'video_pause',
   VIDEO_SEEKED = 'video_seeked',
