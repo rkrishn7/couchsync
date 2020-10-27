@@ -3,7 +3,7 @@ import { ChromeRuntimeMessages, PopupViews } from '@root/lib/constants';
 
 import store from '@popup/store';
 import { setPopupView } from '@popup/actions/popup';
-import { setJoinUrl, setPartyId, setPartyHost } from '@popup/actions/party';
+import { setParty } from '@popup/actions/party';
 
 import queryString from 'query-string';
 
@@ -13,21 +13,29 @@ import queryString from 'query-string';
  */
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   if (tabs[0] && isValidExtensionUrl(tabs[0].url!)) {
-    const parsed = queryString.parse(tabs[0].url!);
+    const { couchSyncRoomId } = queryString.parse(tabs[0].url!);
 
-    chrome.tabs.sendMessage(tabs[0].id!, { name: ChromeRuntimeMessages.GET_PARTY_DETAILS }, ({ data }) => {
-      if (data.partyId && data.joinUrl) {
-        store.dispatch(setJoinUrl(data.joinUrl));
-        store.dispatch(setPartyId(data.partyId));
-        if (data.isHost) store.dispatch(setPartyHost());
-        store.dispatch(setPopupView(PopupViews.IN_PARTY));
-      } else if (parsed.couchSyncRoomId) {
-        store.dispatch(setPopupView(PopupViews.JOIN_PARTY));
-        store.dispatch(setJoinUrl(tabs[0].url!));
-      } else {
-        store.dispatch(setPopupView(PopupViews.CREATE_PARTY));
+    chrome.tabs.sendMessage(
+      tabs[0].id!,
+      { name: ChromeRuntimeMessages.GET_PARTY_DETAILS },
+      ({ data: { id, joinUrl, hash, isHost } }) => {
+        if (id && joinUrl) {
+          store.dispatch(
+            setParty({
+              id,
+              joinUrl,
+              hash,
+              isHost,
+            })
+          );
+          store.dispatch(setPopupView(PopupViews.IN_PARTY));
+        } else if (couchSyncRoomId) {
+          store.dispatch(setPopupView(PopupViews.JOIN_PARTY));
+        } else {
+          store.dispatch(setPopupView(PopupViews.CREATE_PARTY));
+        }
       }
-    });
+    );
   } else {
     store.dispatch(setPopupView(PopupViews.INVALID_URL));
   }

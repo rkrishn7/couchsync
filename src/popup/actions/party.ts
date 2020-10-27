@@ -2,25 +2,13 @@ import { PartyActions, ChromeRuntimeMessages, PopupViews } from '@root/lib/const
 import http from '@root/lib/http';
 import { debug } from '@root/lib/utils';
 import { setPopupView } from '@popup/actions/popup';
+import { PartyState } from '@popup/reducers/party';
 import { Dispatch } from 'redux';
 
-export const setJoinUrl = (joinUrl: string | null) => {
+export const setParty = (details: PartyState) => {
   return {
-    type: PartyActions.SET_JOIN_URL,
-    joinUrl,
-  };
-};
-
-export const setPartyId = (partyId: string | null) => {
-  return {
-    type: PartyActions.SET_PARTY_ID,
-    partyId,
-  };
-};
-
-export const setPartyHost = () => {
-  return {
-    type: PartyActions.SET_HOST,
+    type: PartyActions.SET_PARTY,
+    ...details,
   };
 };
 
@@ -29,27 +17,19 @@ export const createParty = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
       if (tabs[0]) {
         try {
-          const {
-            data: { partyHash, joinUrl },
-          } = await http.post('/party/create', {
+          const { data } = await http.post('/party/create', {
             watchUrl: tabs[0].url,
           });
 
-          dispatch({
-            type: PartyActions.CREATE_PARTY,
-            id: partyHash,
-            joinUrl,
-          });
+          const partyDetails = { isHost: true, ...data };
+
+          dispatch(setParty({ isHost: true, ...partyDetails }));
           dispatch(setPopupView(PopupViews.IN_PARTY));
 
-          // Send a runtime message. Will be picked up by content-script
+          // Send a runtime message to be picked up by content-script
           chrome.tabs.sendMessage(tabs[0].id!, {
             name: ChromeRuntimeMessages.SET_PARTY_DETAILS,
-            data: {
-              partyId: partyHash,
-              joinUrl,
-              isHost: true,
-            },
+            data: partyDetails,
           });
         } catch (error) {
           debug(error.message);

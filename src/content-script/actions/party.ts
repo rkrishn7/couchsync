@@ -1,21 +1,9 @@
 import { PartyActions } from '@root/lib/constants';
+import { PartyState } from '@contentScript/reducers/party';
 
-export const setPartyId = (partyId: string) => {
+export const setParty = (details: PartyState) => {
   return {
-    type: PartyActions.SET_PARTY_ID,
-    partyId,
-  };
-};
-
-export const setJoinUrl = (joinUrl: string | null) => {
-  return {
-    type: PartyActions.SET_JOIN_URL,
-    joinUrl,
-  };
-};
-
-export const setPartyHost = () => {
-  return {
-    type: PartyActions.SET_HOST,
+    type: PartyActions.SET_PARTY,
+    ...details,
   };
 };
