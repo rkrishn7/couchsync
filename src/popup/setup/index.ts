@@ -13,7 +13,9 @@ import queryString from 'query-string';
  */
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   if (tabs[0] && isValidExtensionUrl(tabs[0].url!)) {
-    const { couchSyncRoomId } = queryString.parse(tabs[0].url!);
+    const {
+      query: { couchSyncRoomId },
+    } = queryString.parseUrl(tabs[0].url!);
 
     chrome.tabs.sendMessage(
       tabs[0].id!,
