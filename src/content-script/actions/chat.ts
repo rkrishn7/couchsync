@@ -1,13 +1,29 @@
-import { ChatActions } from '@root/lib/constants/chat';
+import { ChatActions, SocketEvents } from '@root/lib/constants';
+
+import socket from '@contentScript/socket';
+import { StoreState } from '@contentScript/store';
+
+import { Dispatch } from 'redux';
+
+import camelCase from 'camelcase-keys';
 
 export const sendMessage = (content: string) => {
-  return {
-    type: ChatActions.SEND_MESSAGE,
-    message: {
+  return (dispatch: Dispatch, getState: () => StoreState) => {
+    const state = getState();
+
+    const messageData = {
       content,
-      isOwnMessage: !!Math.round(Math.random()),
-      timestamp: Date.now(),
-    },
+      partyId: state.party.id,
+      partyHash: state.party.hash,
+      sentAt: new Date(),
+    };
+
+    socket.emit(SocketEvents.SEND_MESSAGE, messageData, ({ message }: any) => {
+      dispatch({
+        type: ChatActions.NEW_MESSAGE,
+        message: { isOwnMessage: true, ...camelCase(message) },
+      });
+    });
   };
 };
 

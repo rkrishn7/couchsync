@@ -21,7 +21,7 @@ const party = (state: PartyState = initialState, action: Action) => {
     case PartyActions.SET_PARTY:
       return {
         ...state,
-        id: action.roomId,
+        id: action.id,
         joinUrl: action.joinUrl,
         hash: action.hash,
         isHost: true,

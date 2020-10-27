@@ -23,12 +23,37 @@ export const createParty = () => {
 
           const partyDetails = { isHost: true, ...data };
 
-          dispatch(setParty({ isHost: true, ...partyDetails }));
+          dispatch(setParty(partyDetails));
           dispatch(setPopupView(PopupViews.IN_PARTY));
 
           // Send a runtime message to be picked up by content-script
           chrome.tabs.sendMessage(tabs[0].id!, {
-            name: ChromeRuntimeMessages.SET_PARTY_DETAILS,
+            name: ChromeRuntimeMessages.JOIN_PARTY,
+            data: partyDetails,
+          });
+        } catch (error) {
+          debug(error.message);
+        }
+      }
+    });
+  };
+};
+
+export const joinParty = ({ hash }: any) => {
+  return (dispatch: Dispatch) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
+      if (tabs[0]) {
+        try {
+          const { data: party } = await http.get(`/party?partyHash=${hash}`);
+
+          const partyDetails = { isHost: false, ...party };
+
+          dispatch(setParty(partyDetails));
+          dispatch(setPopupView(PopupViews.IN_PARTY));
+
+          // Send a runtime message to be picked up by content-script
+          chrome.tabs.sendMessage(tabs[0].id!, {
+            name: ChromeRuntimeMessages.JOIN_PARTY,
             data: partyDetails,
           });
         } catch (error) {

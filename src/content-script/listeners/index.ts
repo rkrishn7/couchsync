@@ -1,8 +1,7 @@
 import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
-import { setParty } from '@contentScript/actions/party';
-import { PartyState } from '@contentScript/reducers/party';
+import { joinParty } from '@contentScript/actions/party';
 import store from '@contentScript/store';
 import '@contentScript/listeners/player';
 
@@ -79,8 +78,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       });
       break;
     }
-    case ChromeRuntimeMessages.SET_PARTY_DETAILS: {
-      store.dispatch(setParty(message.data! as PartyState));
+    case ChromeRuntimeMessages.JOIN_PARTY: {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      store.dispatch(joinParty(message.data!));
       break;
     }
     default:
