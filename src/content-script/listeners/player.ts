@@ -1,37 +1,34 @@
 import { debug } from '@root/lib/utils';
-import socket from '@root/lib/socket';
-import { SocketEvents } from '@root/lib/constants/socket';
+import socket from '@contentScript/socket';
 import store from '@contentScript/store';
+import { SocketEvents } from '@root/lib/constants/socket';
+import { SupportedPlatforms } from '@root/lib/types';
 
 //------------------------------------------------------------------------------
 
 // functions for each platform that can be run to get their video
 const videoLocators = {
-  youtube: () => {
+  youtube: (): HTMLVideoElement | null => {
     return document.querySelector('.html5-main-video');
   },
-  vimeo: () => {
+  vimeo: (): HTMLVideoElement | null => {
     return document.querySelector('video');
   },
-  default: () => {
+  default: (): HTMLVideoElement | null => {
     return document.querySelector('video');
   },
 };
 
 //------------------------------------------------------------------------------
 
-function findVideoPlayer() {
+function findVideoPlayer(): HTMLVideoElement | null {
   const url = window.location.href;
-  const platforms = ['youtube', 'vimeo'];
-
   let player = null;
 
-  for (let i = 0; i < platforms.length; i += 1) {
-    const platform = platforms[i];
+  for (const platform of Object.values(SupportedPlatforms)) {
     if (url.includes(platform)) {
       debug(`Located ${platform} video element`);
       player = videoLocators[platform]();
-      debug(player);
     }
   }
 
@@ -49,37 +46,16 @@ function findVideoPlayer() {
 
 //------------------------------------------------------------------------------
 
-function extractEventData(event) {
-  // Need to evaluate non-enumerables: https://stackoverflow.com/a/48055076
-  function evalSingleProp(parent, prop) {
-    Object.defineProperty(parent, prop, {
-      value: parent[prop],
-      enumerable: true,
-      configurable: true,
-    });
-  }
-
-  evalSingleProp(event, 'srcElement');
-
-  const props = ['currentTime', 'duration', 'playbackRate'];
-  props.forEach(prop => {
-    evalSingleProp(event.srcElement, prop);
-  });
-
-  return event.target;
-}
-
-function addVideoListeners(player) {
+function addVideoListeners(player: HTMLVideoElement) {
   // TODO: hostRequired should default to true once that's implemented
-  function sendVideoEvent(socketEvent, hostRequired = true) {
-    return event => {
-      // debug(event);
+  function sendVideoEvent(socketEvent: SocketEvents, hostRequired = false) {
+    return (event: any) => {
       const state = store.getState();
       const { isHost } = state.party;
       const { roomId } = state.party;
-      const eventData = extractEventData(event);
+      const { currentTime, duration, playbackRate } = event.target;
 
-      const payload = { eventData, roomId };
+      const payload = { roomId, currentTime, duration, playbackRate };
 
       if (hostRequired && isHost) {
         debug(`Host emitting ${socketEvent}`);
@@ -101,7 +77,7 @@ function addVideoListeners(player) {
 
 function attachToVideoPlayer() {
   const videoPlayer = findVideoPlayer();
-  addVideoListeners(videoPlayer);
+  if (videoPlayer) addVideoListeners(videoPlayer);
 }
 
 //------------------------------------------------------------------------------
