@@ -4,6 +4,7 @@ import { toggleChat } from '@contentScript/actions/chat';
 import { setRoomId, setJoinUrl } from '@contentScript/actions/party';
 import socket from '@popup/socket';
 import store from '@contentScript/store';
+import '@contentScript/listeners/player';
 
 /**
  * Our content script has a different browsing context than that of the current webpage
