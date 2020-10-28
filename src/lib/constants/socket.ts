@@ -1,5 +1,6 @@
 export enum SocketEvents {
-  CHAT_MESSAGE = 'chat_message',
+  NEW_MESSAGE = 'new_message',
+  SEND_MESSAGE = 'send_message',
   CONNECT = 'connect',
   CREATE_PARTY = 'create_party',
 
@@ -7,6 +8,7 @@ export enum SocketEvents {
   VIDEO_PAUSE = 'video_pause',
   VIDEO_SEEKED = 'video_seeked',
   VIDEO_PROGRESS = 'video_progress',
+  JOIN_PARTY = 'join_party',
 }
 
 export interface CreatePartyResponse {

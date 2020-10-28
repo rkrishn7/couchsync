@@ -1,42 +1,65 @@
-import {
-  PartyActions,
-  SocketEvents,
-  CreatePartyResponse,
-  ChromeRuntimeMessages,
-  PopupViews,
-} from '@root/lib/constants';
-// import { StoreState } from '@popup/store';
+import { PartyActions, ChromeRuntimeMessages, PopupViews } from '@root/lib/constants';
+import http from '@root/lib/http';
+import { debug } from '@root/lib/utils';
 import { setPopupView } from '@popup/actions/popup';
-import socket from '@contentScript/socket';
+import { PartyState } from '@popup/reducers/party';
 import { Dispatch } from 'redux';
 
-export const setJoinUrl = (joinUrl: string | null) => {
+export const setParty = (details: PartyState) => {
   return {
-    type: PartyActions.SET_JOIN_URL,
-    joinUrl,
+    type: PartyActions.SET_PARTY,
+    ...details,
   };
 };
 
 export const createParty = () => {
   return (dispatch: Dispatch) => {
-    socket.emit(SocketEvents.CREATE_PARTY, ({ roomId }: CreatePartyResponse) => {
-      dispatch({
-        type: PartyActions.CREATE_PARTY,
-        roomId,
-      });
-      dispatch(setPopupView(PopupViews.IN_PARTY));
-
-      // Send message to content-script
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        if (tabs[0]) {
-          const joinUrl = `${tabs[0].url}&couchSyncRoomId=${roomId}`;
-          dispatch(setJoinUrl(joinUrl));
-          chrome.tabs.sendMessage(tabs[0].id!, {
-            name: ChromeRuntimeMessages.SET_PARTY_DETAILS,
-            data: { roomId, joinUrl },
+    chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
+      if (tabs[0]) {
+        try {
+          const { data } = await http.post('/party/create', {
+            watchUrl: tabs[0].url,
           });
+
+          const partyDetails = { isHost: true, ...data };
+
+          dispatch(setParty(partyDetails));
+          dispatch(setPopupView(PopupViews.IN_PARTY));
+
+          // Send a runtime message to be picked up by content-script
+          chrome.tabs.sendMessage(tabs[0].id!, {
+            name: ChromeRuntimeMessages.JOIN_PARTY,
+            data: partyDetails,
+          });
+        } catch (error) {
+          debug(error.message);
         }
-      });
+      }
+    });
+  };
+};
+
+export const joinParty = ({ hash }: any) => {
+  return (dispatch: Dispatch) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
+      if (tabs[0]) {
+        try {
+          const { data: party } = await http.get(`/party?partyHash=${hash}`);
+
+          const partyDetails = { isHost: false, ...party };
+
+          dispatch(setParty(partyDetails));
+          dispatch(setPopupView(PopupViews.IN_PARTY));
+
+          // Send a runtime message to be picked up by content-script
+          chrome.tabs.sendMessage(tabs[0].id!, {
+            name: ChromeRuntimeMessages.JOIN_PARTY,
+            data: partyDetails,
+          });
+        } catch (error) {
+          debug(error.message);
+        }
+      }
     });
   };
 };

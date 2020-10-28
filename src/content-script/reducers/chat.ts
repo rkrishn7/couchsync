@@ -14,7 +14,7 @@ const initialState: ChatState = {
 
 const messages = (state: ChatState = initialState, action: Action) => {
   switch (action.type) {
-    case ChatActions.SEND_MESSAGE:
+    case ChatActions.NEW_MESSAGE:
       return {
         ...state,
         messages: [...state.messages, action.message],

@@ -1,4 +1,4 @@
 export enum ChatActions {
-  SEND_MESSAGE = 'SEND_MESSAGE',
+  NEW_MESSAGE = 'NEW_MESSAGE',
   TOGGLE_CHAT = 'TOGGLE_CHAT',
 }

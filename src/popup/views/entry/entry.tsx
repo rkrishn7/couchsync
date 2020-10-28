@@ -9,6 +9,7 @@ import { StoreState } from '@popup/store';
 
 import { CreateParty } from '@popup/views/party/create';
 import { ActiveParty } from '@popup/views/party/active';
+import { JoinParty } from '@popup/views/party/join';
 
 const Container = styled(Flex)`
   flex-direction: column;
@@ -35,7 +36,7 @@ const Entry: React.FC<ReduxProps> = ({ popupView }) => {
           case PopupViews.CREATE_PARTY:
             return <CreateParty />;
           case PopupViews.JOIN_PARTY:
-            return <Heading fontSize={2}>Join Party</Heading>;
+            return <JoinParty />;
           case PopupViews.INVALID_URL:
             return <Heading fontSize={2}>Please navigate to a youtube video</Heading>;
           case PopupViews.LOADING:

@@ -1,7 +1,7 @@
 import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
-import { setRoomId, setJoinUrl } from '@contentScript/actions/party';
+import { joinParty } from '@contentScript/actions/party';
 import store from '@contentScript/store';
 import '@contentScript/listeners/player';
 
@@ -72,14 +72,18 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       store.dispatch(toggleChat());
       sendResponse();
       break;
-    case ChromeRuntimeMessages.GET_PARTY_DETAILS:
-      sendResponse({ data: { roomId: storeState.party.roomId, joinUrl: storeState.party.joinUrl } });
+    case ChromeRuntimeMessages.GET_PARTY_DETAILS: {
+      sendResponse({
+        data: storeState.party,
+      });
       break;
-    case ChromeRuntimeMessages.SET_PARTY_DETAILS:
-      const { roomId, joinUrl } = message.data!;
-      if (roomId) store.dispatch(setRoomId(roomId));
-      if (joinUrl) store.dispatch(setJoinUrl(joinUrl));
+    }
+    case ChromeRuntimeMessages.JOIN_PARTY: {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      store.dispatch(joinParty(message.data!));
       break;
+    }
     default:
   }
 });
