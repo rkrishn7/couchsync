@@ -52,10 +52,10 @@ function addVideoListeners(player: HTMLVideoElement) {
     return (event: any) => {
       const state = store.getState();
       const { isHost } = state.party;
-      const { roomId } = state.party;
+      const { id: partyId } = state.party;
       const { currentTime, duration, playbackRate } = event.target;
 
-      const payload = { roomId, currentTime, duration, playbackRate };
+      const payload = { partyId, currentTime, duration, playbackRate };
 
       if (hostRequired && isHost) {
         debug(`Host emitting ${socketEvent}`);
