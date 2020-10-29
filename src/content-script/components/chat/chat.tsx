@@ -17,7 +17,7 @@ const ChatContainer = styled(Card)<{ enabled: boolean }>`
   display: flex;
   flex-direction: column;
   border-radius: ${p => p.theme.radii[2]}px;
-  border: 2px solid ${p => p.theme.colors.greyLight};
+  padding: 0px;
 `;
 
 const ChatButton = styled.button`
@@ -39,6 +39,13 @@ const ChatButton = styled.button`
   &:hover {
     opacity: 1;
   }
+`;
+
+const ChatBanner = styled(Brand)`
+  background-color: ${p => p.theme.colors.primary};
+  border-top-right-radius: ${p => p.theme.radii[2]}px;
+  border-top-left-radius: ${p => p.theme.radii[2]}px;
+  box-shadow: 0px 2px 20px -15px ${p => p.theme.colors.primary};
 `;
 
 const ChatIcon = styled(FontAwesomeIcon)<{ chatEnabled: boolean }>`
@@ -66,8 +73,8 @@ const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
     <Flex flexDirection="column" alignItems="flex-end">
       {chatEnabled && (
         <ChatContainer enabled={chatEnabled}>
-          <Brand mb={2} color="secondary" />
-          <Flex flex={3} overflowY="scroll">
+          <ChatBanner headingProps={{ fontWeight: 600 }} color="white" padding="7px" />
+          <Flex flex={3} overflowY="scroll" margin={2}>
             <MessageList />
           </Flex>
           <MessageBar />

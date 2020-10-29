@@ -11,6 +11,7 @@ interface MessageCellProps {
 }
 
 type CellProps = Pick<MessageCellProps, 'isOwnMessage'>;
+type AvatarProps = Pick<MessageCellProps, 'isOwnMessage'>;
 
 const Cell = styled(Box)<CellProps>`
   min-height: 30px;
@@ -25,17 +26,27 @@ const Cell = styled(Box)<CellProps>`
   font-size: 14px;
   font-weight: 500;
   color: white;
+  word-wrap: break-word;
   text-align: ${p => (p.isOwnMessage ? 'right' : 'left')};
+  box-shadow: ${p => (p.isOwnMessage ? '-' : '')}10px 11px 20px -12px rgba(0, 0, 0, 0.75);
+`;
+
+const Avatar = styled.img<AvatarProps>`
+  width: 24px;
+  height: 24px;
+  margin-left: ${p => p.theme.space[1]}px;
+  margin-right: ${p => p.theme.space[1]}px;
+  border-radius: 9999px;
 `;
 
 type MessageRowProps = Pick<MessageCellProps, 'isOwnMessage'>;
 
 const MessageRow = styled(Flex)<MessageRowProps>`
-  flex-direction: row;
+  flex-direction: ${p => (p.isOwnMessage ? 'row' : 'row-reverse')};
   width: 100%;
   margin-top: 2px;
   margin-bottom: 2px;
-  justify-content: ${p => (p.isOwnMessage ? 'flex-end' : 'flex-start')};
+  justify-content: flex-end;
 `;
 
 const mapState = (state: StoreState) => {
@@ -53,6 +64,7 @@ const MessageCell: React.FC<ReduxProps & MessageCellProps> = ({ isOwnMessage, me
   return (
     <MessageRow isOwnMessage={isOwnMessage}>
       <Cell isOwnMessage={isOwnMessage}>{message}</Cell>
+      <Avatar src="https://avatars.dicebear.com/api/male/rohan.svg" />
     </MessageRow>
   );
 };
