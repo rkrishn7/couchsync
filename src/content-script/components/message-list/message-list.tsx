@@ -25,8 +25,8 @@ type ReduxProps = ConnectedProps<typeof connector>;
 const MessageList: React.FC<ReduxProps> = ({ messages }) => {
   return (
     <Container>
-      {messages?.map(({ content, isOwnMessage }) => (
-        <MessageCell message={content} isOwnMessage={isOwnMessage} />
+      {messages?.map(({ content, isOwnMessage, name, avatarUrl }) => (
+        <MessageCell message={content} isOwnMessage={isOwnMessage} userName={name} avatarUrl={avatarUrl} />
       ))}
     </Container>
   );

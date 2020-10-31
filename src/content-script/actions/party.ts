@@ -7,6 +7,7 @@ import socket from '@contentScript/socket';
 import { Dispatch } from 'redux';
 
 import camelCase from 'camelcase-keys';
+import { setUser } from './user';
 
 export const setParty = (details: PartyState) => {
   return {
@@ -18,9 +19,10 @@ export const setParty = (details: PartyState) => {
 export const joinParty = ({ hash, isHost }: any) => {
   return (dispatch: Dispatch) => {
     try {
-      socket.emit(SocketEvents.JOIN_PARTY, { partyHash: hash }, ({ party }: any) => {
+      socket.emit(SocketEvents.JOIN_PARTY, { partyHash: hash }, ({ party, user }: any) => {
         // TODO: client middleware to camelCase responses?
         dispatch(setParty({ isHost, ...camelCase(party) }));
+        dispatch(setUser({ ...camelCase(user) }));
       });
     } catch (error) {
       debug(error.message);

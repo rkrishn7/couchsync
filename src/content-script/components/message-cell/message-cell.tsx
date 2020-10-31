@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex } from 'rebass';
+import { Box, Flex, Text } from 'rebass';
 import styled from '@root/style/styled';
 
 import { connect, ConnectedProps } from 'react-redux';
@@ -8,6 +8,8 @@ import { StoreState } from '@contentScript/store';
 interface MessageCellProps {
   isOwnMessage?: boolean;
   message: string;
+  avatarUrl: string;
+  userName: string;
 }
 
 type CellProps = Pick<MessageCellProps, 'isOwnMessage'>;
@@ -15,7 +17,7 @@ type AvatarProps = Pick<MessageCellProps, 'isOwnMessage'>;
 
 const Cell = styled(Box)<CellProps>`
   min-height: 30px;
-  width: 50%;
+  width: 100%;
   border-radius: ${p => p.theme.radii[2]}px;
   border-top-left-radius: ${p => (p.isOwnMessage ? p.theme.radii[2] : 0)}px;
   border-top-right-radius: ${p => p.theme.radii[2]}px;
@@ -47,6 +49,7 @@ const MessageRow = styled(Flex)<MessageRowProps>`
   margin-top: 2px;
   margin-bottom: 2px;
   justify-content: flex-end;
+  align-items: center;
 `;
 
 const mapState = (state: StoreState) => {
@@ -60,11 +63,16 @@ const connector = connect(mapState);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const MessageCell: React.FC<ReduxProps & MessageCellProps> = ({ isOwnMessage, message }) => {
+const MessageCell: React.FC<ReduxProps & MessageCellProps> = ({ isOwnMessage, message, avatarUrl, userName }) => {
   return (
     <MessageRow isOwnMessage={isOwnMessage}>
-      <Cell isOwnMessage={isOwnMessage}>{message}</Cell>
-      <Avatar src="https://avatars.dicebear.com/api/male/rohan.svg" />
+      <Flex flexDirection="column" width="50%">
+        <Text fontSize="9px" color="greyDark" textAlign={isOwnMessage ? 'right' : 'left'}>
+          {userName}
+        </Text>
+        <Cell isOwnMessage={isOwnMessage}>{message}</Cell>
+      </Flex>
+      <Avatar src={avatarUrl} />
     </MessageRow>
   );
 };

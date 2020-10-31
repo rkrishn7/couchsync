@@ -15,10 +15,9 @@ import store from './store';
 
 const Root = styled(Box)`
   background-color: ${p => p.theme.colors.muted};
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 `;
 
 function App() {

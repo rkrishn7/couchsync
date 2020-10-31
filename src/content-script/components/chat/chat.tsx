@@ -3,7 +3,7 @@ import { Card, Flex } from 'rebass';
 import styled from '@root/style/styled';
 import { Brand } from '@root/components/brand';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { StoreState } from '@contentScript/store';
@@ -35,9 +35,14 @@ const ChatButton = styled.button`
   opacity: 0.8;
   cursor: pointer;
   border: 2px solid white;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     opacity: 1;
+  }
+
+  &:active {
+    transform: scale(0.9);
   }
 `;
 
@@ -45,12 +50,8 @@ const ChatBanner = styled(Brand)`
   background-color: ${p => p.theme.colors.primary};
   border-top-right-radius: ${p => p.theme.radii[2]}px;
   border-top-left-radius: ${p => p.theme.radii[2]}px;
-  box-shadow: 0px 2px 20px -15px ${p => p.theme.colors.primary};
-`;
-
-const ChatIcon = styled(FontAwesomeIcon)<{ chatEnabled: boolean }>`
-  transition: all 0.2s linear;
-  transform: ${p => (p.chatEnabled ? 'rotate(45deg)' : 'rotate(0deg)')};
+  border: 1px solid ${p => p.theme.colors.secondary};
+  box-shadow: 0px 5px 20px -15px rgba(0, 0, 0, 0.7);
 `;
 
 const mapState = (state: StoreState) => {
@@ -81,7 +82,7 @@ const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
         </ChatContainer>
       )}
       <ChatButton onClick={toggleChat}>
-        <ChatIcon icon={faPlus} color="white" size="2x" chatEnabled={chatEnabled} />
+        <FontAwesomeIcon icon={chatEnabled ? faTimes : faComment} color="white" size="2x" />
       </ChatButton>
     </Flex>
   );
