@@ -12,6 +12,7 @@ import '@contentScript/listeners/player';
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
  */
 window.addEventListener('message', event => {
+  const storeState = store.getState();
   switch (event.data.name) {
     case WindowMessages.URL_CHANGE:
       debug(event.data.name);
