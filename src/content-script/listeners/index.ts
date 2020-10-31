@@ -2,6 +2,7 @@ import { ChromeRuntimeMessages, SocketEvents, WindowMessages } from '@root/lib/c
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
 import { joinParty } from '@contentScript/actions/party';
+import { pageTransition, teardown } from '@contentScript/utils/transitions';
 import store from '@contentScript/store';
 import '@contentScript/listeners/player';
 
@@ -11,18 +12,11 @@ import '@contentScript/listeners/player';
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
  */
 window.addEventListener('message', event => {
-  const storeState = store.getState();
   switch (event.data.name) {
     case WindowMessages.URL_CHANGE:
       debug(event.data.name);
       debug(document.location.href);
-      // check to see if user is host before switching URLS
-      if (storeState.party.isHost && storeState.party.roomId != null) {
-        store.dispatch(setRoomId(storeState.party.roomId));
-        const newURL = `${document.location.href}&couchSyncRoomId=${storeState.party.roomId}`;
-        socket.emit(SocketEvents.URL_CHANGE, `URL Changed in room ${storeState.party.roomId}`);
-        store.dispatch(setJoinUrl(newURL)); // this is kinda hacky but it works
-      }
+      pageTransition(document.location.href);
       break;
     case WindowMessages.PAGE_UNLOAD:
       debug(event.data);
@@ -58,17 +52,6 @@ function addNavigationListeners() {
 (function setup() {
   inject(addNavigationListeners);
 })();
-
-/**
- * Handles teardown of content script.
- * Clean up any listeners, sockets, visual components here.
- */
-function teardown() {
-  const extensionRoot = document.getElementById('extension-panel-root');
-  if (extensionRoot) {
-    extensionRoot.style.display = 'none';
-  }
-}
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   const storeState = store.getState();
