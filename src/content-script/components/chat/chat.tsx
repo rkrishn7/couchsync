@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Flex } from 'rebass';
 import styled from '@root/style/styled';
 import { Brand } from '@root/components/brand';
+import { Animate } from '@root/components/animate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faTimes } from '@fortawesome/free-solid-svg-icons';
 
@@ -72,7 +73,7 @@ type ReduxProps = ConnectedProps<typeof connector>;
 const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
   return !partyId ? null : (
     <Flex flexDirection="column" alignItems="flex-end">
-      {chatEnabled && (
+      <Animate show={chatEnabled} type="popOut" duration={100}>
         <ChatContainer enabled={chatEnabled}>
           <ChatBanner headingProps={{ fontWeight: 600 }} color="white" padding="7px" />
           <Flex flex={3} overflowY="scroll" margin={2}>
@@ -80,7 +81,7 @@ const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
           </Flex>
           <MessageBar />
         </ChatContainer>
-      )}
+      </Animate>
       <ChatButton onClick={toggleChat}>
         <FontAwesomeIcon icon={chatEnabled ? faTimes : faComment} color="white" size="2x" />
       </ChatButton>
