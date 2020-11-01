@@ -1,10 +1,10 @@
 import { debug } from '@root/lib/utils';
 import socket from '@contentScript/socket';
 import store from '@contentScript/store';
-import { SocketEvents } from '@root/lib/constants/socket';
+import { SocketEvents, VideoSocketEvents } from '@root/lib/constants/socket';
+import { VideoEvent, VideoEventData } from '@root/lib/types/video';
+import { MAX_DESYNC_SEC } from '@root/lib/constants/video';
 import { SupportedPlatforms } from '@root/lib/types';
-
-//------------------------------------------------------------------------------
 
 // functions for each platform that can be run to get their video
 const videoLocators = {
@@ -18,8 +18,6 @@ const videoLocators = {
     return document.querySelector('video');
   },
 };
-
-//------------------------------------------------------------------------------
 
 function findVideoPlayer(): HTMLVideoElement | null {
   const url = window.location.href;
@@ -44,43 +42,55 @@ function findVideoPlayer(): HTMLVideoElement | null {
   return player;
 }
 
-//------------------------------------------------------------------------------
-
 function addVideoListeners(player: HTMLVideoElement) {
-  // TODO: hostRequired should default to true once that's implemented
-  function sendVideoEvent(socketEvent: SocketEvents, hostRequired = false) {
+  // TODO: Once implemented, include communism/facism check
+  function sendVideoEvent(socketEvent: VideoSocketEvents) {
     return (event: any) => {
       const state = store.getState();
-      const { isHost } = state.party;
-      const { id: partyId } = state.party;
-      const { currentTime, duration, playbackRate } = event.target;
+      const { isHost, hash } = state.party;
 
-      const payload = { partyId, currentTime, duration, playbackRate };
+      // if party not created, don't send anything
+      if (!hash) return;
 
-      if (hostRequired && isHost) {
+      // construct payload
+      const { paused, currentTime, duration, playbackRate } = event.target;
+      const eventData: VideoEventData = { eventType: socketEvent, paused, currentTime, playbackRate, duration };
+      const payload: VideoEvent = { partyHash: hash, eventData };
+
+      // send payload
+      if (isHost) {
         debug(`Host emitting ${socketEvent}`);
-        socket.emit(socketEvent, payload);
-      } else if (!hostRequired) {
-        debug(`User emitting ${socketEvent}`);
-        socket.emit(socketEvent, payload);
+        socket.emit(SocketEvents.VIDEO_EVENT, payload);
       }
     };
   }
 
-  player.onplay = sendVideoEvent(SocketEvents.VIDEO_PLAY);
-  player.onpause = sendVideoEvent(SocketEvents.VIDEO_PAUSE);
-  player.onseeked = sendVideoEvent(SocketEvents.VIDEO_SEEKED);
-  player.onprogress = sendVideoEvent(SocketEvents.VIDEO_PROGRESS, false);
+  player.onplay = sendVideoEvent(VideoSocketEvents.VIDEO_PLAY);
+  player.onpause = sendVideoEvent(VideoSocketEvents.VIDEO_PAUSE);
+  player.onseeked = sendVideoEvent(VideoSocketEvents.VIDEO_SEEKED);
+  player.onprogress = sendVideoEvent(VideoSocketEvents.VIDEO_PROGRESS);
 }
 
-//------------------------------------------------------------------------------
+function addVideoSocketListeners(player: HTMLVideoElement) {
+  socket.on(SocketEvents.VIDEO_EVENT, (data: VideoEventData) => {
+    // match player play/pause state
+    if (data.paused) player.pause();
+    else player.play();
 
-function attachToVideoPlayer() {
+    // match player playback speed
+    player.playbackRate = data.playbackRate;
+
+    // resync if needed and not host. handles seek events
+    if (Math.abs(player.currentTime - data.currentTime) > MAX_DESYNC_SEC) {
+      player.currentTime = data.currentTime;
+    }
+  });
+}
+
+export function attachToVideoPlayer() {
   const videoPlayer = findVideoPlayer();
-  if (videoPlayer) addVideoListeners(videoPlayer);
+  if (videoPlayer) {
+    addVideoListeners(videoPlayer);
+    addVideoSocketListeners(videoPlayer);
+  }
 }
-
-//------------------------------------------------------------------------------
-
-attachToVideoPlayer();
-// TODO: need to call attachToVideoPlayer every time URL_CHANGE occurs
