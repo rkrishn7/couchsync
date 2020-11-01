@@ -3,7 +3,7 @@ import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
 import { joinParty } from '@contentScript/actions/party';
 import store from '@contentScript/store';
-import '@contentScript/listeners/player';
+import { attachToVideoPlayer } from './player';
 
 /**
  * Our content script has a different browsing context than that of the current webpage
@@ -14,7 +14,7 @@ window.addEventListener('message', event => {
   switch (event.data.name) {
     case WindowMessages.URL_CHANGE:
       debug(event.data.name);
-      debug(document.location.href);
+      attachToVideoPlayer();
       break;
     case WindowMessages.PAGE_UNLOAD:
       debug(event.data);
@@ -23,6 +23,8 @@ window.addEventListener('message', event => {
       debug('Unknown Window Message Name');
   }
 });
+
+window.addEventListener('load', attachToVideoPlayer);
 
 // CANNOT REFERENCE ANY VARIABLES FROM OUTER SCOPE (They will not resolve)
 function addNavigationListeners() {
