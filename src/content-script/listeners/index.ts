@@ -1,7 +1,7 @@
-import { ChromeRuntimeMessages, SocketEvents, WindowMessages } from '@root/lib/constants';
+import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
-import { joinParty } from '@contentScript/actions/party';
+import { joinParty, setParty } from '@contentScript/actions/party';
 import { pageTransition, teardown } from '@contentScript/utils/transitions';
 import store from '@contentScript/store';
 import '@contentScript/listeners/player';
@@ -12,7 +12,6 @@ import '@contentScript/listeners/player';
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
  */
 window.addEventListener('message', event => {
-  const storeState = store.getState();
   switch (event.data.name) {
     case WindowMessages.URL_CHANGE:
       debug(event.data.name);
@@ -54,7 +53,7 @@ function addNavigationListeners() {
   inject(addNavigationListeners);
 })();
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: any, _sender, sendResponse) => {
   const storeState = store.getState();
   switch (message.name) {
     case ChromeRuntimeMessages.HIDE_CONTENT_SCRIPT_HTML:
@@ -74,6 +73,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       store.dispatch(joinParty(message.data!));
+      break;
+    }
+    case ChromeRuntimeMessages.URL_CHANGE: {
+      store.dispatch(setParty({ ...storeState.party, joinUrl: message.data }));
       break;
     }
     default:

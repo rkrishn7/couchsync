@@ -1,26 +1,28 @@
 import { PartyActions } from '@root/lib/constants/party';
 import { SocketEvents } from '@root/lib/constants';
 import { setParty } from '@contentScript/actions/party';
-import { StoreState } from '@contentScript/store';
-import { Dispatch } from 'redux';
+import store from '@contentScript/store';
 import socket from '@contentScript/socket';
 /**
  * Handles any page transition on the hosts side and notifies the server with a URL_CHANGE event
  */
-export const pageTransition = (newUrl: string) => {
-  return (dispatch: Dispatch, getState: () => StoreState) => {
-    const state = getState();
-    if (state.party.isHost && state.party.id != null) {
-      const partyDetails = {
-        ...state.party,
-        joinUrl: newUrl,
-      };
-      dispatch(setParty(partyDetails));
-      // const newURL = `${document.location.href}&couchSyncRoomId=${state.party.id}`;
-      socket.emit(SocketEvents.URL_CHANGE, `URL Changed in room ${state.party.id}`);
-    }
-  };
-};
+export function pageTransition(newUrl: string) {
+  console.log('in pageTransition');
+  const state = store.getState();
+  if (state.party.isHost && state.party.id != null) {
+    const partyDetails = {
+      ...state.party,
+      joinUrl: `${newUrl}&couchSyncRoomId=${state.party.hash}`,
+    };
+    console.log(`URL Changed in room ${state.party.hash}`);
+    store.dispatch(setParty(partyDetails));
+    // const newURL = `${document.location.href}&couchSyncRoomId=${state.party.id}`;
+    socket.emit(SocketEvents.URL_CHANGE, {
+      partyHash: state.party.hash,
+      newUrl: `${newUrl}&couchSyncRoomId=${state.party.hash}`,
+    });
+  }
+}
 
 /**
  * Handles teardown of content script.
