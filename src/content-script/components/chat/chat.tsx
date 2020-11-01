@@ -2,22 +2,15 @@ import React from 'react';
 import { Card, Flex } from 'rebass';
 import styled from '@root/style/styled';
 import { Brand } from '@root/components/brand';
+import { Animate } from '@root/components/animate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { CSSTransition } from 'react-transition-group';
-import './fade-scale-transition.css';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { StoreState } from '@contentScript/store';
 import { MessageBar } from '@contentScript/components/message-bar';
 import { MessageList } from '@contentScript/components/message-list';
 import { toggleChat } from '@contentScript/actions/chat';
-
-const Animate = ({ children, ...props }) => (
-  <CSSTransition {...props} timeout={1000} classNames="fade">
-    {children}
-  </CSSTransition>
-);
 
 const ChatContainer = styled(Card)<{ enabled: boolean }>`
   width: 300px;
@@ -80,7 +73,7 @@ type ReduxProps = ConnectedProps<typeof connector>;
 const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
   return !partyId ? null : (
     <Flex flexDirection="column" alignItems="flex-end">
-      <Animate in={chatEnabled} mountOnEnter unmountOnExit>
+      <Animate show={chatEnabled} type="popOut" duration={100}>
         <ChatContainer enabled={chatEnabled}>
           <ChatBanner headingProps={{ fontWeight: 600 }} color="white" padding="7px" />
           <Flex flex={3} overflowY="scroll" margin={2}>
