@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, Flex } from 'rebass';
+import { Card, Flex } from 'rebass';
 import styled from '@root/style/styled';
 import { Brand } from '@root/components/brand';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,12 +18,6 @@ const Animate = ({ children, ...props }) => (
     {children}
   </CSSTransition>
 );
-
-const TestBox = styled(Box)`
-  background-color: white;
-  height: 100px;
-  width: 100px;
-`;
 
 const ChatContainer = styled(Card)<{ enabled: boolean }>`
   width: 300px;
