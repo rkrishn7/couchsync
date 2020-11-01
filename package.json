@@ -67,6 +67,7 @@
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
+    "react-spinners": "^0.9.0",
     "react-toast-notifications": "^2.4.0",
     "rebass": "^4.0.7",
     "redux": "^4.0.5",

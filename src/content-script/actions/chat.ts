@@ -21,7 +21,7 @@ export const sendMessage = (content: string) => {
     socket.emit(SocketEvents.SEND_MESSAGE, messageData, ({ message }: any) => {
       dispatch({
         type: ChatActions.NEW_MESSAGE,
-        message: { isOwnMessage: true, ...camelCase(message) },
+        message: { isOwnMessage: true, ...camelCase(message, { deep: true }) },
       });
     });
   };

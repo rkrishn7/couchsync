@@ -2,8 +2,8 @@ const theme = {
   colors: {
     text: '#000',
     background: '#fff',
-    primary: '#07c',
-    secondary: '#30c',
+    primary: '#F58B51',
+    secondary: '#F26418',
     muted: '#f6f6f9',
     greyLightest: '#F8F8F9',
     greyLighter: '#F4F4F4',
@@ -15,9 +15,9 @@ const theme = {
     highlight: 'hsla(205, 100%, 40%, 0.125)',
   },
   fonts: {
-    body: 'Poppins, sans-serif',
-    heading: 'Poppins, sans-serif',
-    monospace: 'Poppins, sans-serif',
+    body: 'Nunito, sans-serif',
+    heading: 'Nunito, sans-serif',
+    monospace: 'Nunito, sans-serif',
   },
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontWeights: {
