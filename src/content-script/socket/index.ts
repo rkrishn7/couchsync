@@ -13,7 +13,7 @@ socket.on(SocketEvents.CONNECT, () => console.log('connected'));
 socket.on(SocketEvents.NEW_MESSAGE, ({ message }: any) => {
   store.dispatch({
     type: ChatActions.NEW_MESSAGE,
-    message: { isOwnMessage: false, ...camelCase(message) },
+    message: { isOwnMessage: false, ...camelCase(message, { deep: true }) },
   });
 });
 

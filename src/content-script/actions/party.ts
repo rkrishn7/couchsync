@@ -21,8 +21,8 @@ export const joinParty = ({ hash, isHost }: any) => {
     try {
       socket.emit(SocketEvents.JOIN_PARTY, { partyHash: hash }, ({ party, user }: any) => {
         // TODO: client middleware to camelCase responses?
-        dispatch(setParty({ isHost, ...camelCase(party) }));
-        dispatch(setUser({ ...camelCase(user) }));
+        dispatch(setParty({ isHost, ...camelCase(party, { deep: true }) }));
+        dispatch(setUser({ ...camelCase(user, { deep: true }) }));
       });
     } catch (error) {
       debug(error.message);
