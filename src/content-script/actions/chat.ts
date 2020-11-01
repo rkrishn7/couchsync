@@ -5,8 +5,6 @@ import { StoreState } from '@contentScript/store';
 
 import { Dispatch } from 'redux';
 
-import camelCase from 'camelcase-keys';
-
 export const sendMessage = (content: string) => {
   return (dispatch: Dispatch, getState: () => StoreState) => {
     const state = getState();
@@ -21,7 +19,7 @@ export const sendMessage = (content: string) => {
     socket.emit(SocketEvents.SEND_MESSAGE, messageData, ({ message }: any) => {
       dispatch({
         type: ChatActions.NEW_MESSAGE,
-        message: { isOwnMessage: true, ...camelCase(message, { deep: true }) },
+        message: { isOwnMessage: true, ...message },
       });
     });
   };
