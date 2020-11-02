@@ -3,6 +3,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Flex, Text } from 'rebass';
 import { Input } from '@rebass/forms';
 
+import { urlChange } from '@popup/actions/party';
+
 import styled from '@root/style/styled';
 
 import { StoreState } from '@popup/store';

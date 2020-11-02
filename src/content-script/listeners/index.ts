@@ -75,10 +75,6 @@ chrome.runtime.onMessage.addListener((message: any, _sender, sendResponse) => {
       store.dispatch(joinParty(message.data!));
       break;
     }
-    case ChromeRuntimeMessages.URL_CHANGE: {
-      store.dispatch(setParty({ ...storeState.party, joinUrl: message.data }));
-      break;
-    }
     default:
   }
 });

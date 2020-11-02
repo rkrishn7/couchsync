@@ -5,6 +5,7 @@ import settings from '@root/lib/settings';
 import { ChatActions, SocketEvents, ChromeRuntimeMessages } from '@root/lib/constants';
 
 import store from '@contentScript/store';
+import { setParty } from '@contentScript/actions/party';
 
 const socket = io(settings.apiUrl);
 
@@ -17,12 +18,10 @@ socket.on(SocketEvents.NEW_MESSAGE, ({ message }: any) => {
   });
 });
 
-socket.on(SocketEvents.URL_CHANGE, ({ newUrl }: any) => {
-  console.log('NEW URL!');
-  chrome.runtime.sendMessage({
-    name: ChromeRuntimeMessages.JOIN_PARTY,
-    data: newUrl,
-  });
+socket.on(SocketEvents.URL_CHANGE, ({ data }: any) => {
+  store.dispatch(setParty({ ...store.getState().party, joinUrl: data.newUrl }));
+  // Dispatch new URL to store
+  // Update chrome's current tabs
 });
 
 export default socket;

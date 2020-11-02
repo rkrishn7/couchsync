@@ -63,3 +63,10 @@ export const joinParty = ({ hash }: any) => {
     });
   };
 };
+
+export const urlChange = (newUrl: string) => {
+  console.log('changin the URL');
+  chrome.tabs.query({ active: true, currentWindow: true }, tab => {
+    chrome.tabs.update(tab.id, { url: newUrl });
+  });
+};
