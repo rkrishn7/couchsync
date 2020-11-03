@@ -44,7 +44,7 @@ const Party: React.FC<ReduxProps> = ({ joinUrl }) => {
   return (
     <Container>
       <Text fontSize={2}>Share the code with your friends:</Text>
-      {joinUrl && <RoomDisplay value={joinUrl} readOnly />}
+      {joinUrl && <RoomDisplay value={joinUrl} readOnly onChange={urlChange(joinUrl)} />}
     </Container>
   );
 };
