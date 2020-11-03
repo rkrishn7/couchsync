@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
-import camelCase from 'camelcase-keys';
 
 import settings from '@root/lib/settings';
 import { ChatActions, SocketEvents, ChromeRuntimeMessages } from '@root/lib/constants';
@@ -14,7 +13,7 @@ socket.on(SocketEvents.CONNECT, () => console.log('connected'));
 socket.on(SocketEvents.NEW_MESSAGE, ({ message }: any) => {
   store.dispatch({
     type: ChatActions.NEW_MESSAGE,
-    message: { isOwnMessage: false, ...camelCase(message) },
+    message: { isOwnMessage: false, ...message },
   });
 });
 

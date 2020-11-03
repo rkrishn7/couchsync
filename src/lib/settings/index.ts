@@ -1,5 +1,5 @@
 const SettingsDefault = {
-  brandName: 'Couch Sync',
+  brandName: 'couchsync',
   apiUrl: 'http://localhost:8000',
 };
 

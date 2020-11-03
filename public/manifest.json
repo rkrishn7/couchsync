@@ -21,14 +21,15 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
+      "run_at": "document_end",
       "css": ["/static/css/contentScript.css"],
       "js": ["/static/js/contentScript.js"]
     }
   ],
   "icons": {
-    "16": "icon_16.png",
-    "48": "icon_48.png",
-    "128": "icon_128.png"
+    "16": "couchsync-16.png",
+    "48": "couchsync-48.png",
+    "128": "couchsync-128.png"
   },
   "manifest_version": 2
 }

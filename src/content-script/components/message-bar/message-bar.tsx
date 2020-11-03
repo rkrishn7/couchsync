@@ -13,6 +13,7 @@ const Container = styled(Card)`
   padding-bottom: 2px;
   border-radius: ${p => p.theme.radii[2]}px;
   border: 0.5px solid ${p => p.theme.colors.grey};
+  margin: 4px;
 `;
 
 const ChatInput = styled(Input)`

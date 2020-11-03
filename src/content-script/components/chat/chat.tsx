@@ -2,8 +2,9 @@ import React from 'react';
 import { Card, Flex } from 'rebass';
 import styled from '@root/style/styled';
 import { Brand } from '@root/components/brand';
+import { Animate } from '@root/components/animate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { StoreState } from '@contentScript/store';
@@ -17,7 +18,7 @@ const ChatContainer = styled(Card)<{ enabled: boolean }>`
   display: flex;
   flex-direction: column;
   border-radius: ${p => p.theme.radii[2]}px;
-  border: 2px solid ${p => p.theme.colors.greyLight};
+  padding: 0px;
 `;
 
 const ChatButton = styled.button`
@@ -35,15 +36,23 @@ const ChatButton = styled.button`
   opacity: 0.8;
   cursor: pointer;
   border: 2px solid white;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     opacity: 1;
   }
+
+  &:active {
+    transform: scale(0.9);
+  }
 `;
 
-const ChatIcon = styled(FontAwesomeIcon)<{ chatEnabled: boolean }>`
-  transition: all 0.2s linear;
-  transform: ${p => (p.chatEnabled ? 'rotate(45deg)' : 'rotate(0deg)')};
+const ChatBanner = styled(Brand)`
+  background-color: ${p => p.theme.colors.primary};
+  border-top-right-radius: ${p => p.theme.radii[2]}px;
+  border-top-left-radius: ${p => p.theme.radii[2]}px;
+  border: 1px solid ${p => p.theme.colors.secondary};
+  box-shadow: 0px 5px 20px -15px rgba(0, 0, 0, 0.7);
 `;
 
 const mapState = (state: StoreState) => {
@@ -64,17 +73,17 @@ type ReduxProps = ConnectedProps<typeof connector>;
 const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
   return !partyId ? null : (
     <Flex flexDirection="column" alignItems="flex-end">
-      {chatEnabled && (
+      <Animate show={chatEnabled} type="popOut" duration={100}>
         <ChatContainer enabled={chatEnabled}>
-          <Brand mb={2} color="secondary" />
-          <Flex flex={3} overflowY="scroll">
+          <ChatBanner headingProps={{ fontWeight: 600 }} color="white" padding="7px" />
+          <Flex flex={3} overflowY="scroll" margin={2}>
             <MessageList />
           </Flex>
           <MessageBar />
         </ChatContainer>
-      )}
+      </Animate>
       <ChatButton onClick={toggleChat}>
-        <ChatIcon icon={faPlus} color="white" size="2x" chatEnabled={chatEnabled} />
+        <FontAwesomeIcon icon={chatEnabled ? faTimes : faComment} color="white" size="2x" />
       </ChatButton>
     </Flex>
   );
