@@ -85,7 +85,14 @@ const ActiveParty: React.FC<ReduxProps> = ({ joinUrl }) => {
       </Text>
       {joinUrl && (
         <Flex flexDirection="row" alignItems="center">
-          <RoomDisplay value={joinUrl} readOnly ref={roomDisplayRef} />
+          <RoomDisplay
+            value={joinUrl}
+            readOnly
+            ref={roomDisplayRef}
+            onChange={() => {
+              urlChange(joinUrl);
+            }}
+          />
           <CopyButton onClick={handleCopyClick}>
             <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
           </CopyButton>

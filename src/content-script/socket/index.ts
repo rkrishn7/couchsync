@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 
 import settings from '@root/lib/settings';
-import { ChatActions, SocketEvents, ChromeRuntimeMessages } from '@root/lib/constants';
+import { ChatActions, SocketEvents } from '@root/lib/constants';
 
 import store from '@contentScript/store';
 import { setParty } from '@contentScript/actions/party';

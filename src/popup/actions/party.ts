@@ -64,7 +64,7 @@ export const joinParty = ({ hash }: any) => {
   };
 };
 
-export const urlChange = (newUrl: string) => {
+export const urlChange = ({ newUrl }: any) => {
   console.log('changin the URL');
   // current issue in this is that if we
   function changeCurrWin() {
@@ -72,6 +72,5 @@ export const urlChange = (newUrl: string) => {
       chrome.tabs.update(tab.id, { url: newUrl });
     });
   }
-  store.dispatch()
   setTimeout(changeCurrWin, 3000);
 };

@@ -4,8 +4,9 @@ export enum SocketEvents {
   CONNECT = 'connect',
   CREATE_PARTY = 'create_party',
   JOIN_PARTY = 'join_party',
-  URL_CHANGE = 'url_change',
   VIDEO_EVENT = 'video_event',
+  URL_CHANGE = 'url_change',
+  USER_LOADED = 'user_loaded',
 }
 
 export interface CreatePartyResponse {

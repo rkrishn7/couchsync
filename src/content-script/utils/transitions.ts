@@ -7,14 +7,12 @@ import socket from '@contentScript/socket';
  * Handles any page transition on the hosts side and notifies the server with a URL_CHANGE event
  */
 export function pageTransition(newUrl: string) {
-  console.log('in pageTransition');
   const state = store.getState();
   if (state.party.isHost && state.party.id != null) {
     const partyDetails = {
       ...state.party,
       joinUrl: `${newUrl}&couchSyncRoomId=${state.party.hash}`,
     };
-    console.log(`URL Changed in room ${state.party.hash}`);
     store.dispatch(setParty(partyDetails));
     // const newURL = `${document.location.href}&couchSyncRoomId=${state.party.id}`;
     socket.emit(SocketEvents.URL_CHANGE, {
