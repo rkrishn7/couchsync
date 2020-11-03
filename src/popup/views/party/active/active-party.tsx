@@ -19,10 +19,12 @@ const Container = styled(Flex)`
 const RoomDisplay = styled(Input)`
   flex: 1;
   border-radius: ${p => p.theme.radii[2]}px;
-  font-size: 14px;
+  font-size: 12px;
   margin-top: ${p => p.theme.space[2]}px;
   font-family: ${p => p.theme.fonts.body};
   border-color: ${p => p.theme.colors.greyLight};
+  color: ${p => p.theme.colors.primary};
+  transition: all 0.2s linear;
   &:hover {
     border-color: ${p => p.theme.colors.greyDark};
   }
@@ -78,8 +80,8 @@ const ActiveParty: React.FC<ReduxProps> = ({ joinUrl }) => {
 
   return (
     <Container>
-      <Text fontSize={2} textAlign="center">
-        Share the code with your friends
+      <Text fontSize={1} textAlign="center" color="greyDark">
+        share the code with your friends
       </Text>
       {joinUrl && (
         <Flex flexDirection="row" alignItems="center">

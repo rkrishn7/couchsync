@@ -5,6 +5,9 @@ const theme = {
     primary: '#F58B51',
     secondary: '#F26418',
     muted: '#f6f6f9',
+    info: '#F58B51',
+    success: '#99CC33',
+    error: '#CC3300',
     greyLightest: '#F8F8F9',
     greyLighter: '#F4F4F4',
     greyLight: '#E8E9EA',
@@ -18,6 +21,7 @@ const theme = {
     body: 'Nunito, sans-serif',
     heading: 'Nunito, sans-serif',
     monospace: 'Nunito, sans-serif',
+    button: 'Nunito, sans-serif',
   },
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontWeights: {

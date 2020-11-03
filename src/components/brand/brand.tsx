@@ -1,25 +1,29 @@
 import React from 'react';
-import { Flex, FlexProps, Heading, HeadingProps } from 'rebass';
-import styled from '@root/style/styled';
+import { Box, BoxProps, Heading, HeadingProps } from 'rebass';
 import settings from '@root/lib/settings';
+import styled from '@root/style/styled';
 
-const BrandContainer = styled(Flex)`
-  justify-content: center;
-  align-items: center;
-`;
-
-interface BrandProps extends FlexProps {
+interface BrandProps extends BoxProps {
   children?: never;
   color?: string;
   headingProps?: HeadingProps;
 }
 
+const FlashHeading = styled(Heading)`
+  transition: all 200ms linear;
+
+  :hover {
+    color: ${p => p.theme.colors.secondary};
+    cursor: pointer;
+  }
+`;
+
 export const Brand: React.FC<BrandProps> = ({ color = 'primary', headingProps, ...props }) => {
   return (
-    <BrandContainer {...props}>
-      <Heading color={color} {...headingProps}>
+    <Box {...props}>
+      <FlashHeading color={color} {...headingProps}>
         {settings.brandName}
-      </Heading>
-    </BrandContainer>
+      </FlashHeading>
+    </Box>
   );
 };

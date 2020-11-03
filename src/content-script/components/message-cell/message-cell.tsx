@@ -33,7 +33,7 @@ const Cell = styled(Box)<CellProps>`
   box-shadow: ${p => (p.isOwnMessage ? '-' : '')}10px 11px 20px -12px rgba(0, 0, 0, 0.75);
 `;
 
-const Avatar = styled.img<AvatarProps>`
+export const Avatar = styled.img<AvatarProps>`
   width: 24px;
   height: 24px;
   margin-left: ${p => p.theme.space[1]}px;

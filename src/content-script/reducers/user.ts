@@ -10,7 +10,7 @@ type Action = { type: UserActions } & Record<string, any>;
 
 const initialState: UserState = {};
 
-const user = (state: UserState = initialState, action: Action) => {
+const user = (state: UserState = initialState, action: Action): UserState => {
   switch (action.type) {
     case UserActions.SET_USER:
       return {
