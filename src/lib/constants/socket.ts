@@ -5,6 +5,7 @@ export enum SocketEvents {
   CREATE_PARTY = 'create_party',
   JOIN_PARTY = 'join_party',
   VIDEO_EVENT = 'video_event',
+  CHANGE_NAME = 'change_name',
 }
 
 export interface CreatePartyResponse {

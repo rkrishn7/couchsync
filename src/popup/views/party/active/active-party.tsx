@@ -2,14 +2,9 @@ import React, { useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Flex, Text } from 'rebass';
 import { Input } from '@rebass/forms';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import styled from '@root/style/styled';
 
 import { StoreState } from '@popup/store';
-
-import http from '@root/lib/http';
-import socket from '@contentScript/socket';
-import { debug } from '@root/lib/utils/debug';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
@@ -71,7 +66,6 @@ type ReduxProps = ConnectedProps<typeof connector>;
 const ActiveParty: React.FC<ReduxProps> = ({ joinUrl }) => {
   const roomDisplayRef = useRef<HTMLInputElement>();
   const [copiedJoinUrl, setCopiedJoinUrl] = useState(false);
-  const [newName, setNewName] = useState('');
 
   const handleCopyClick = () => {
     if (roomDisplayRef) {
@@ -81,51 +75,19 @@ const ActiveParty: React.FC<ReduxProps> = ({ joinUrl }) => {
     }
   };
 
-  const handleSetNewName = () => {
-    setNewName('blah');
-  };
-
-  const handleSubmitUserName = async () => {
-    try {
-      await http.post('/user/changeName', {
-        newUserName: newName,
-        socketId: socket.id,
-      });
-    } catch (error) {
-      debug(error.message);
-    }
-  };
-
   return (
     <Container>
-      <Tabs>
-        <TabList>
-          <Tab>Party</Tab>
-          <Tab>Change Name</Tab>
-        </TabList>
-        <TabPanel>
-          <Text fontSize={2} textAlign="center">
-            Share the code with your friends
-          </Text>
-          {joinUrl && (
-            <Flex flexDirection="row" alignItems="center">
-              <RoomDisplay value={joinUrl} readOnly ref={roomDisplayRef} />
-              <CopyButton onClick={handleCopyClick}>
-                <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
-              </CopyButton>
-            </Flex>
-          )}
-        </TabPanel>
-        <TabPanel>
-          <form onSubmit={handleSubmitUserName}>
-            <label>
-              New username:
-              <input type="text" onChange={handleSetNewName} />
-            </label>
-            <input type="submit" value="Submit" />
-          </form>
-        </TabPanel>
-      </Tabs>
+      <Text fontSize={2} textAlign="center">
+        Share the code with your friends
+      </Text>
+      {joinUrl && (
+        <Flex flexDirection="row" alignItems="center">
+          <RoomDisplay value={joinUrl} readOnly ref={roomDisplayRef} />
+          <CopyButton onClick={handleCopyClick}>
+            <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
+          </CopyButton>
+        </Flex>
+      )}
     </Container>
   );
 };

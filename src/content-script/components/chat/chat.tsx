@@ -5,11 +5,13 @@ import { Brand } from '@root/components/brand';
 import { Animate } from '@root/components/animate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { StoreState } from '@contentScript/store';
 import { MessageBar } from '@contentScript/components/message-bar';
 import { MessageList } from '@contentScript/components/message-list';
+import { ChangeName } from '@contentScript/components/change-name';
 import { toggleChat } from '@contentScript/actions/chat';
 
 const ChatContainer = styled(Card)<{ enabled: boolean }>`
@@ -19,6 +21,33 @@ const ChatContainer = styled(Card)<{ enabled: boolean }>`
   flex-direction: column;
   border-radius: ${p => p.theme.radii[2]}px;
   padding: 0px;
+`;
+
+const TabsStyle = styled(Tabs)`
+  width: 300px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  border-radius: ${p => p.theme.radii[2]}px;
+  padding: 0px;
+`;
+
+const TabCell = styled(Tab)`
+  min-height: 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: inline;
+  border-radius: ${p => p.theme.radii[2]}px;
+  border-top-left-radius: ${p => p.theme.radii[2]}px;
+  border-top-right-radius: ${p => p.theme.radii[2]}px;
+  border-bottom-right-radius: ${p => p.theme.radii[2]}px;
+  border-bottom-left-radius: ${p => p.theme.radii[2]}px;
+  background-color: ${p => p.theme.colors.secondary};
+  padding: 5px;
+  font-size: 10px;
+  font-weight: 500;
+  color: white;
+  text-align: center;
 `;
 
 const ChatButton = styled.button`
@@ -76,10 +105,25 @@ const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
       <Animate show={chatEnabled} type="popOut" duration={100}>
         <ChatContainer enabled={chatEnabled}>
           <ChatBanner headingProps={{ fontWeight: 600 }} color="white" padding="7px" />
-          <Flex flex={3} overflowY="scroll" margin={2}>
-            <MessageList />
-          </Flex>
-          <MessageBar />
+          <TabsStyle>
+            <Flex flex={3} margin={2}>
+              <TabList>
+                <TabCell>Chat</TabCell>
+                <TabCell>Change Name</TabCell>
+              </TabList>
+            </Flex>
+            <TabPanel>
+              <Flex flex={3} overflowY="scroll" margin={2}>
+                <MessageList />
+              </Flex>
+              <MessageBar />
+            </TabPanel>
+            <TabPanel>
+              <Flex flex={3} margin={2}>
+                <ChangeName />
+              </Flex>
+            </TabPanel>
+          </TabsStyle>
         </ChatContainer>
       </Animate>
       <ChatButton onClick={toggleChat}>
