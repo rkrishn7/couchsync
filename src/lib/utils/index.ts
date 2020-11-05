@@ -15,3 +15,15 @@ export const inject = (fn: () => void) => {
 export const isValidExtensionUrl = (url: string) => {
   return url.match(/^.*:\/\/.*.youtube.com\/watch.*$/);
 };
+
+export const disableAutoplay = () => {
+  const autoPlayBtn = document.getElementsByClassName(
+    'style-scope ytd-compact-autoplay-renderer'
+  )[3] as HTMLInputElement;
+  if (autoPlayBtn.getAttribute('aria-pressed') === 'true') {
+    autoPlayBtn.click();
+  }
+  autoPlayBtn.setAttribute('disabled', 'disabled');
+  const autoPlayTxt = document.getElementsByClassName('style-scope ytd-compact-autoplay-renderer')[2] as HTMLElement;
+  autoPlayTxt.innerText = 'Autoplay Disabled when in Party';
+};
