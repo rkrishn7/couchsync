@@ -18,22 +18,14 @@ const HeaderContainer = styled(Flex)`
 const Logo = styled.img`
   width: 48px;
   height: 48px;
-  margin-left: ${p => p.theme.space[2]}px;
+  margin-right: ${p => p.theme.space[2]}px;
 `;
 
 export const Header: React.FC = () => {
   return (
     <HeaderContainer>
+      <Brand color="primary" headingProps={{ fontWeight: 600 }} width="100%" display="flex" ml={2} alignSelf="center" />
       <Logo src="/couchsync-128.png" />
-      <Brand
-        color="primary"
-        headingProps={{ fontWeight: 600 }}
-        width="100%"
-        display="flex"
-        mr={2}
-        alignSelf="center"
-        style={{ justifyContent: 'flex-end' }}
-      />
     </HeaderContainer>
   );
 };

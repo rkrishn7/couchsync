@@ -1992,6 +1992,13 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
+"@types/react-tabs@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/react-tabs/-/react-tabs-2.3.2.tgz#99fb6866bbc6912d44f7bbc99eca03fbbd217960"
+  integrity sha512-QfMelaJSdMcp+CenKhATp12XFFqqUcLXILgwpX3dgWfVYNZPtsLXZDDCRsVn+kwmBOWB+DFPKpQorxbUhnXINw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-toast-notifications@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@types/react-toast-notifications/-/react-toast-notifications-2.4.0.tgz#0ca0732cfae5a6ef5939a676fffac6e64c78bc25"
@@ -3577,6 +3584,11 @@ clone-deep@^4.0.1:
     is-plain-object "^2.0.4"
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
+
+clsx@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
+  integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
 co@^4.6.0:
   version "4.6.0"
@@ -9367,7 +9379,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9619,6 +9631,14 @@ react-spinners@^0.9.0:
   integrity sha512-+x6eD8tn/aYLdxZjNW7fSR1uoAXLb9qq6TFYZR1dFweJvckcf/HfP8Pa/cy5HOvB/cvI4JgrYXTjh2Me3S6Now==
   dependencies:
     "@emotion/core" "^10.0.15"
+
+react-tabs@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-tabs/-/react-tabs-3.1.1.tgz#b363a239f76046bb2158875a1e5921b11064052f"
+  integrity sha512-HpySC29NN1BkzBAnOC+ajfzPbTaVZcSWzMSjk56uAhPC/rBGtli8lTysR4CfPAyEE/hfweIzagOIoJ7nu80yng==
+  dependencies:
+    clsx "^1.1.0"
+    prop-types "^15.5.0"
 
 react-toast-notifications@^2.4.0:
   version "2.4.0"

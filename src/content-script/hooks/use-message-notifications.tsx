@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
 import { Flex, Text } from 'rebass';
 
-import { Avatar } from '@contentScript/components/message-cell/message-cell';
+import { Avatar } from '@root/components/avatar';
 import { StoreState } from '@contentScript/store';
 
 interface MessageNotificationProps {

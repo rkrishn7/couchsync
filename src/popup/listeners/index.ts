@@ -1,5 +1,4 @@
 import { ChromeRuntimeMessages, PopupViews } from '@root/lib/constants';
-// import { debug } from '@root/lib/utils';
 
 import { setPopupView } from '@popup/actions/popup';
 import store from '@popup/store';

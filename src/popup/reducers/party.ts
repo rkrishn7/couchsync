@@ -5,6 +5,7 @@ export interface PartyState {
   isHost: boolean;
   hash: string | null;
   joinUrl: string | null;
+  users: any[];
 }
 
 type Action = { type: PartyActions } & Record<string, any>;
@@ -14,6 +15,7 @@ const initialState: PartyState = {
   joinUrl: null,
   hash: null,
   isHost: false,
+  users: [],
 };
 
 const party = (state: PartyState = initialState, action: Action) => {
@@ -25,6 +27,7 @@ const party = (state: PartyState = initialState, action: Action) => {
         joinUrl: action.joinUrl,
         hash: action.hash,
         isHost: true,
+        users: action.users || [],
       };
     default:
       return state;
