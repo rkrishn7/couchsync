@@ -30,3 +30,9 @@ export const toggleChat = () => {
     type: ChatActions.TOGGLE_CHAT,
   };
 };
+
+export const toggleNotifications = () => {
+  return {
+    type: ChatActions.TOGGLE_NOTIFICATIONS,
+  };
+};

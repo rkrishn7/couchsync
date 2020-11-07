@@ -12,10 +12,11 @@ import { CreateParty } from '@popup/views/party/create';
 import { ActiveParty } from '@popup/views/party/active';
 import { JoinParty } from '@popup/views/party/join';
 
-import HashLoader from 'react-spinners/HashLoader';
+import Loader from 'react-spinners/ScaleLoader';
 
 const Container = styled(Flex)`
   flex-direction: column;
+  background-color: white;
   min-width: 100%;
   min-height: 100%;
 `;
@@ -25,9 +26,6 @@ const SpinnerContainer = styled(Flex)`
   align-items: center;
   justify-content: center;
   padding: 10px;
-  box-flex: 0;
-  box-orient: vertical;
-  box-direction: column;
 `;
 
 const mapState = (state: StoreState) => {
@@ -54,16 +52,16 @@ const Entry: React.FC<ReduxProps> = ({ popupView }) => {
           case PopupViews.INVALID_URL:
             return (
               <SpinnerContainer>
-                <Heading fontSize={3} marginBottom={3}>
+                <Loader loading height={30} width={4} radius={30} margin={5} color={theme.colors.primary} />
+                <Heading fontSize={2} marginTop={3} color="greyDark">
                   please open a youtube video
                 </Heading>
-                <HashLoader loading size={50} color={theme.colors.secondary} />
               </SpinnerContainer>
             );
           case PopupViews.LOADING:
             return (
               <SpinnerContainer>
-                <HashLoader loading size={50} color={theme.colors.secondary} />
+                <Loader loading height={30} width={4} radius={30} margin={5} color={theme.colors.primary} />
               </SpinnerContainer>
             );
           default:
