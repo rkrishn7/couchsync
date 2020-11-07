@@ -5,6 +5,8 @@ import { ChatActions, SocketEvents, PartyActions } from '@root/lib/constants';
 import { debug } from '@root/lib/utils/debug';
 
 import store, { StoreState } from '@contentScript/store';
+import { updateUser } from '@contentScript/actions/party';
+import { updateUserMessages } from '@contentScript/actions/chat';
 
 import { Dispatch } from 'redux';
 
@@ -31,6 +33,11 @@ socket.on(SocketEvents.USER_LEFT_PARTY, ({ user }: any) => {
     type: PartyActions.REMOVE_USER,
     user,
   });
+});
+
+socket.on(SocketEvents.PARTY_USER_UPDATED, ({ user }: any) => {
+  store.dispatch(updateUser(user));
+  store.dispatch(updateUserMessages(user));
 });
 
 socket.on(SocketEvents.NEW_HOST, ({ user }: any) => {

@@ -15,6 +15,13 @@ export const setParty = (details: PartyState) => {
   };
 };
 
+export const updateUser = (user: any) => {
+  return {
+    type: PartyActions.UPDATE_USER,
+    user,
+  };
+};
+
 export const joinParty = ({ hash, isHost }: any) => {
   return (dispatch: Dispatch) => {
     try {

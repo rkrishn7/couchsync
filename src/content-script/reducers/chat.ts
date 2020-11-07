@@ -31,6 +31,18 @@ const messages = (state: ChatState = initialState, action: Action): ChatState =>
         ...state,
         notificationsEnabled: !state.notificationsEnabled,
       };
+    case ChatActions.UPDATE_USER_MESSAGES:
+      return {
+        ...state,
+        messages: state.messages.map(message => {
+          return message.user.id === action.user.id
+            ? {
+                ...message,
+                user: action.user,
+              }
+            : message;
+        }),
+      };
     default:
       return state;
   }

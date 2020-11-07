@@ -3,6 +3,7 @@ export enum PartyActions {
   LEAVE_PARTY = 'LEAVE_PARTY',
   SET_PARTY = 'SET_PARTY',
   ADD_USER = 'ADD_USER',
+  UPDATE_USER = 'UPDATE_USER',
   REMOVE_USER = 'REMOVE_USER',
   SET_IS_HOST = 'SET_IS_HOST',
 }

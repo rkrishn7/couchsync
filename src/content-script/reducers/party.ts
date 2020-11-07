@@ -44,6 +44,11 @@ const party = (state: PartyState = initialState, action: Action): PartyState => 
         ...state,
         isHost: action.isHost,
       };
+    case PartyActions.UPDATE_USER:
+      return {
+        ...state,
+        users: state.users.map(user => (user.id === action.user.id ? action.user : user)),
+      };
     default:
       return state;
   }

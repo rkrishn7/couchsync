@@ -4,6 +4,7 @@ import { sendActiveTabMessage } from '@root/lib/utils/chrome';
 
 import { UserState } from '@popup/reducers/user';
 import { StoreState } from '@popup/store';
+import { updateUser } from '@popup/actions/party';
 
 import { Dispatch } from 'redux';
 
@@ -12,16 +13,19 @@ interface UpdateProfileDetails {
   avatarUrl: string;
 }
 
-export const setUser = (details: UserState) => {
+export const setUser = (user: UserState) => {
   return {
     type: UserActions.SET_USER,
-    ...details,
+    ...user,
   };
 };
 
 export const updateProfile = ({ name, avatarUrl }: UpdateProfileDetails) => {
   return async (dispatch: Dispatch, getState: () => StoreState) => {
-    const { id: userId } = getState().user;
+    const {
+      party: { hash: partyHash },
+      user: { id: userId },
+    } = getState();
 
     try {
       const {
@@ -30,9 +34,8 @@ export const updateProfile = ({ name, avatarUrl }: UpdateProfileDetails) => {
         userId,
         name,
         avatarUrl,
+        partyHash,
       });
-
-      console.log(user);
 
       /**
        * Relay to the content-script
@@ -40,6 +43,7 @@ export const updateProfile = ({ name, avatarUrl }: UpdateProfileDetails) => {
       sendActiveTabMessage({ name: ChromeRuntimeMessages.SET_USER_DETAILS, data: { user } });
 
       dispatch(setUser(user));
+      dispatch(updateUser(user));
     } catch (error) {
       console.log(error);
     }

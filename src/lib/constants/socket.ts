@@ -8,6 +8,7 @@ export enum SocketEvents {
   USER_JOINED_PARTY = 'user_joined_party',
   USER_LEFT_PARTY = 'user_left_party',
   NEW_HOST = 'new_host',
+  PARTY_USER_UPDATED = 'party_user_updated',
 }
 
 export interface CreatePartyResponse {

@@ -72,7 +72,7 @@ const ActiveParty: React.FC<ReduxProps> = ({ joinUrl, partyMembers, currentUser 
         </TabPanel>
         {/* Party Users */}
         <TabPanel>
-          <UserList users={partyMembers} currentUser={currentUser} />
+          <UserList />
         </TabPanel>
         {/* Profile Settings */}
         <TabPanel>

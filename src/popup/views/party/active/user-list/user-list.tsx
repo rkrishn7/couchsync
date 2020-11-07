@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Flex, Text } from 'rebass';
+import { sortBy } from 'lodash';
+import { connect, ConnectedProps } from 'react-redux';
 
 import { Avatar } from '@root/components/avatar';
 import styled from '@root/style/styled';
+import { sendActiveTabMessage } from '@root/lib/utils/chrome';
+import { ChromeRuntimeMessages } from '@root/lib/constants';
 
-interface UserListProps {
-  users: any[];
-  currentUser: any;
-}
+import { setParty } from '@popup/actions/party';
+import { StoreState } from '@popup/store';
 
 const UserCell = styled(Flex)`
   padding: ${p => p.theme.space[2]}px;
@@ -27,13 +29,37 @@ const UserCell = styled(Flex)`
   }
 `;
 
-export const UserList: React.FC<UserListProps> = ({ users, currentUser }) => {
+const mapState = (state: StoreState) => {
+  return {
+    users: state.party.users,
+    currentUser: state.user,
+  };
+};
+
+const mapDispatch = {
+  setParty,
+};
+
+const connector = connect(mapState, mapDispatch);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+const UserList: React.FC<ReduxProps> = ({ users, currentUser, setParty }) => {
+  useEffect(() => {
+    /**
+     * Set the party details
+     */
+    sendActiveTabMessage({ name: ChromeRuntimeMessages.GET_PARTY_DETAILS }, ({ data: party }) => {
+      setParty(party);
+    });
+  }, [setParty]);
+
   return (
     <Flex flexDirection="column">
       <Text fontSize={1} color="greyDark" ml={1} mb={2} fontWeight={700}>
         party members
       </Text>
-      {users.map(user => (
+      {sortBy(users, u => currentUser.id !== u.id).map(user => (
         <UserCell>
           <Text fontSize={1} ml={1}>
             {user.name} {currentUser.id === user.id && ' (me)'}
@@ -44,3 +70,5 @@ export const UserList: React.FC<UserListProps> = ({ users, currentUser }) => {
     </Flex>
   );
 };
+
+export default connector(UserList);
