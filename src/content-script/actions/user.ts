@@ -2,6 +2,7 @@ import { SocketEvents, UserActions } from '@root/lib/constants';
 import { UserState } from '@contentScript/reducers/user';
 import { StoreState } from '@contentScript/store';
 import { Dispatch } from 'redux';
+import { debug } from '@root/lib/utils/debug';
 import socket from '@contentScript/socket';
 
 export const setUser = (details: UserState) => {
@@ -17,5 +18,17 @@ export const updateName = (newName: string) => {
     console.log('updating name');
     console.log(socket.id);
     socket.emit(SocketEvents.CHANGE_NAME, { newName });
+  };
+};
+
+export const updateAvatar = () => {
+  return (dispatch: Dispatch, getState: () => StoreState) => {
+    console.log('updating avatar');
+    console.log(socket.id);
+    try {
+      socket.emit(SocketEvents.CHANGE_AVATAR);
+    } catch (error) {
+      debug(error.message);
+    }
   };
 };

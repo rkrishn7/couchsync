@@ -12,6 +12,7 @@ import { StoreState } from '@contentScript/store';
 import { MessageBar } from '@contentScript/components/message-bar';
 import { MessageList } from '@contentScript/components/message-list';
 import { ChangeName } from '@contentScript/components/change-name';
+import { ChangeAvatar } from '@contentScript/components/change-avatar';
 import { toggleChat } from '@contentScript/actions/chat';
 
 const ChatContainer = styled(Card)<{ enabled: boolean }>`
@@ -123,6 +124,9 @@ const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat }) => {
             <>
               <Flex flex={3} margin={2}>
                 <ChangeName />
+              </Flex>
+              <Flex flex={3} margin={2}>
+                <ChangeAvatar />
               </Flex>
             </>
           )}
