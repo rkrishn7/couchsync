@@ -20,7 +20,7 @@ export const Button = styled(RButton)`
   }
   &:hover {
     cursor: pointer;
-    background-color: ${p => (p.disabled ? p.theme.colors.grey : p.theme.colors.primary)};
-    color: white;
+    background-color: ${p => !p.disabled && p.theme.colors.primary};
+    color: ${p => !p.disabled && 'white'};
   }
 `;
