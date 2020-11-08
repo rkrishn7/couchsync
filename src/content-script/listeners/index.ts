@@ -1,7 +1,8 @@
 import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
-import { joinParty } from '@contentScript/actions/party';
+import { joinParty, createNotification } from '@contentScript/actions/party';
+import { setUser } from '@contentScript/actions/user';
 import store from '@contentScript/store';
 import { attachToVideoPlayer } from './player';
 
@@ -80,10 +81,28 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       });
       break;
     }
+    case ChromeRuntimeMessages.GET_USER_DETAILS: {
+      sendResponse({
+        data: {
+          user: storeState.user,
+        },
+      });
+      break;
+    }
+    case ChromeRuntimeMessages.SET_USER_DETAILS: {
+      store.dispatch(setUser(message.data!.user));
+      break;
+    }
     case ChromeRuntimeMessages.JOIN_PARTY: {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       store.dispatch(joinParty(message.data!));
+      break;
+    }
+    case ChromeRuntimeMessages.ADD_NOTIFICATION: {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      store.dispatch(createNotification(message.data!.notification));
       break;
     }
     default:

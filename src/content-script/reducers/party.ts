@@ -1,4 +1,5 @@
 import { PartyActions } from '@root/lib/constants/party';
+import { Notification } from '@root/lib/types/notification';
 
 export interface PartyState {
   id: string | null;
@@ -6,6 +7,7 @@ export interface PartyState {
   joinUrl: string | null;
   hash: string | null;
   users: any[];
+  notifications: Notification[];
 }
 
 type Action = { type: PartyActions } & Record<string, any>;
@@ -16,6 +18,7 @@ const initialState: PartyState = {
   hash: null,
   isHost: false,
   users: [],
+  notifications: [],
 };
 
 const party = (state: PartyState = initialState, action: Action): PartyState => {
@@ -43,6 +46,24 @@ const party = (state: PartyState = initialState, action: Action): PartyState => 
       return {
         ...state,
         isHost: action.isHost,
+      };
+    case PartyActions.UPDATE_USER:
+      return {
+        ...state,
+        users: state.users.map(user => (user.id === action.user.id ? action.user : user)),
+      };
+    case PartyActions.CREATE_NOTIFICATION:
+      return {
+        ...state,
+        notifications: [
+          ...state.notifications,
+          { id: state.notifications.length, seen: false, ...action.notification },
+        ],
+      };
+    case PartyActions.MARK_NOTIFICATION_SEEN:
+      return {
+        ...state,
+        notifications: state.notifications.map(n => (n.id === action.notificationId ? { ...n, seen: true } : n)),
       };
     default:
       return state;
