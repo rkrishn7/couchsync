@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Flex } from 'rebass';
+import { Flex, Text } from 'rebass';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faClipboardCheck, faUserPlus, faUsers, faCog } from '@fortawesome/free-solid-svg-icons';
@@ -24,8 +24,6 @@ const Container = styled(Flex)`
 const mapState = (state: StoreState) => {
   return {
     joinUrl: state.party.joinUrl,
-    partyMembers: state.party.users,
-    currentUser: state.user,
   };
 };
 
@@ -33,7 +31,7 @@ const connector = connect(mapState, null);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const ActiveParty: React.FC<ReduxProps> = ({ joinUrl, partyMembers, currentUser }) => {
+const ActiveParty: React.FC<ReduxProps> = ({ joinUrl }) => {
   const roomDisplayRef = useRef<HTMLInputElement>();
   const [copiedJoinUrl, setCopiedJoinUrl] = useState(false);
 
@@ -62,11 +60,16 @@ const ActiveParty: React.FC<ReduxProps> = ({ joinUrl, partyMembers, currentUser 
         {/* Join Link */}
         <TabPanel>
           {joinUrl && (
-            <Flex flexDirection="row" alignItems="center">
-              <Input value={joinUrl} readOnly ref={roomDisplayRef} />
-              <IconButton onClick={handleCopyClick} style={{ marginLeft: theme.space[1] }}>
-                <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
-              </IconButton>
+            <Flex flexDirection="column">
+              <Text fontSize={1} color="greyDark" ml={1} mb={1} fontWeight={700}>
+                join url
+              </Text>
+              <Flex flexDirection="row" alignItems="center">
+                <Input value={joinUrl} readOnly ref={roomDisplayRef} />
+                <IconButton onClick={handleCopyClick} style={{ marginLeft: theme.space[1] }}>
+                  <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
+                </IconButton>
+              </Flex>
             </Flex>
           )}
         </TabPanel>

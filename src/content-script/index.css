@@ -19,19 +19,6 @@ code {
   z-index: 2147483647;
 }
 
-.react-toast-notifications__container {
-  z-index: 2147483647 !important;
-}
-
-.react-toast-notifications__toast--success {
-  background-color: rgba(51, 0, 204, 0.7) !important;
-  color: white !important;
-}
-
-.react-toast-notifications__toast__icon-wrapper {
-  background-color: rgba(51, 0, 204, 1) !important;
-}
-
 /* FONT CSS */
 
 /* cyrillic-ext */

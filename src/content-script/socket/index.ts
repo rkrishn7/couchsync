@@ -5,7 +5,7 @@ import { ChatActions, SocketEvents, PartyActions } from '@root/lib/constants';
 import { debug } from '@root/lib/utils/debug';
 
 import store, { StoreState } from '@contentScript/store';
-import { updateUser } from '@contentScript/actions/party';
+import { updateUser, createNotification } from '@contentScript/actions/party';
 import { updateUserMessages } from '@contentScript/actions/chat';
 
 import { Dispatch } from 'redux';
@@ -19,6 +19,13 @@ socket.on(SocketEvents.NEW_MESSAGE, ({ message }: any) => {
     type: ChatActions.NEW_MESSAGE,
     message: { isOwnMessage: false, ...message },
   });
+  store.dispatch(
+    createNotification({
+      content: message.content,
+      title: message.user.name,
+      avatar: message.user.avatarUrl,
+    })
+  );
 });
 
 socket.on(SocketEvents.USER_JOINED_PARTY, ({ user }: any) => {

@@ -12,7 +12,7 @@ import { StoreState } from '@contentScript/store';
 import { MessageBar } from '@contentScript/components/message-bar';
 import { MessageList } from '@contentScript/components/message-list';
 import { toggleChat } from '@contentScript/actions/chat';
-import { useMessageNotifications } from '@contentScript/hooks/use-message-notifications';
+import { useNotifications } from '@contentScript/hooks/use-notifications';
 
 const ChatContainer = styled(Card)<{ enabled: boolean }>`
   width: 300px;
@@ -75,8 +75,8 @@ const connector = connect(mapState, mapDispatch);
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat, partyUsers }) => {
-  // Subscribe to message notifications
-  useMessageNotifications();
+  // Subscribe to notifications
+  useNotifications();
 
   return !partyId ? null : (
     <Flex flexDirection="column" alignItems="flex-end">
