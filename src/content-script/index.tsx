@@ -12,7 +12,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 const Main: React.FC = () => (
   <ReduxProvider store={store}>
     <ThemeProvider theme={theme}>
-      <ToastProvider placement="bottom-left" autoDismiss autoDismissTimeout={2000}>
+      <ToastProvider placement="top-left" autoDismiss autoDismissTimeout={2000}>
         <Chat />
       </ToastProvider>
     </ThemeProvider>

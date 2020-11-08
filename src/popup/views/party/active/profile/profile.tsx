@@ -36,6 +36,8 @@ const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setUser, updatePro
   const [name, setName] = useState(userName);
   const [avatar, setAvatar] = useState(avatarUrl);
 
+  const profileUpdated = name !== userName || avatar !== avatarUrl;
+
   useEffect(() => {
     /**
      * Set the user details
@@ -55,7 +57,7 @@ const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setUser, updatePro
   };
 
   const handleUpdateProfile = async () => {
-    if (name === userName && avatar === avatarUrl) return;
+    if (!profileUpdated) return;
     if (!name || !avatarUrl) return;
 
     updateProfile({
@@ -84,7 +86,7 @@ const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setUser, updatePro
         display name
       </Text>
       <Input value={name} onChange={handleNameChange} mb={1} />
-      <Button mt={1} mb={1} onClick={handleUpdateProfile}>
+      <Button mt={1} mb={1} onClick={handleUpdateProfile} disabled={!profileUpdated}>
         <Text fontSize={2} fontWeight={400}>
           update profile
         </Text>

@@ -11,16 +11,16 @@ export const Button = styled(RButton)`
   font-family: ${p => p.theme.fonts.button};
   border-radius: ${p => p.theme.radii[2]}px;
   background-color: white;
-  border: 1px solid ${p => p.theme.colors.primary};
+  border: 1px solid ${p => (p.disabled ? p.theme.colors.greyDark : p.theme.colors.primary)};
   outline: none;
-  color: ${p => p.theme.colors.primary};
+  color: ${p => (p.disabled ? p.theme.colors.greyDark : p.theme.colors.primary)};
   transition: all 0.2s ease-in-out;
   &:active {
-    transform: scale(0.9);
+    ${p => !p.disabled && 'transform: scale(0.9)'};
   }
   &:hover {
     cursor: pointer;
-    background-color: ${p => p.theme.colors.secondary};
+    background-color: ${p => (p.disabled ? p.theme.colors.grey : p.theme.colors.primary)};
     color: white;
   }
 `;
