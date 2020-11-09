@@ -65,7 +65,6 @@ export const joinParty = ({ hash }: any) => {
 };
 
 export const urlChange = ({ newUrl }: any) => {
-  console.log('changin the URL');
   // current issue in this is that if we
   function changeCurrWin() {
     chrome.tabs.query({ active: true, currentWindow: true }, tab => {
