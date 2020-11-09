@@ -25,8 +25,21 @@ export const sendMessage = (content: string) => {
   };
 };
 
+export const updateUserMessages = (user: any) => {
+  return {
+    type: ChatActions.UPDATE_USER_MESSAGES,
+    user,
+  };
+};
+
 export const toggleChat = () => {
   return {
     type: ChatActions.TOGGLE_CHAT,
+  };
+};
+
+export const toggleNotifications = () => {
+  return {
+    type: ChatActions.TOGGLE_NOTIFICATIONS,
   };
 };
