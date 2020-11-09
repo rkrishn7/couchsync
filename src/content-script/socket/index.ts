@@ -6,11 +6,10 @@ import { debug } from '@root/lib/utils/debug';
 
 import { navigate } from '@contentScript/utils/transitions';
 import store, { StoreState } from '@contentScript/store';
-import { updateUser, createNotification } from '@contentScript/actions/party';
+import { updateUser, createNotification, setParty } from '@contentScript/actions/party';
 import { updateUserMessages } from '@contentScript/actions/chat';
 
 import { Dispatch } from 'redux';
-
 
 const socket = io(settings.apiUrl);
 
