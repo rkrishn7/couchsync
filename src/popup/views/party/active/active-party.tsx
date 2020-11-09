@@ -3,8 +3,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Flex, Text } from 'rebass';
 import { Input } from '@rebass/forms';
 
-import { urlChange } from '@popup/actions/party';
-
 import styled from '@root/style/styled';
 
 import { StoreState } from '@popup/store';
@@ -85,14 +83,7 @@ const ActiveParty: React.FC<ReduxProps> = ({ joinUrl }) => {
       </Text>
       {joinUrl && (
         <Flex flexDirection="row" alignItems="center">
-          <RoomDisplay
-            value={joinUrl}
-            readOnly
-            ref={roomDisplayRef}
-            onChange={() => {
-              urlChange(joinUrl);
-            }}
-          />
+          <RoomDisplay value={joinUrl} readOnly ref={roomDisplayRef} />
           <CopyButton onClick={handleCopyClick}>
             <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
           </CopyButton>

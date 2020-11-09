@@ -1,4 +1,3 @@
-import { PartyActions } from '@root/lib/constants/party';
 import { SocketEvents } from '@root/lib/constants';
 import { setParty } from '@contentScript/actions/party';
 import store from '@contentScript/store';
@@ -22,6 +21,25 @@ export function pageTransition(newUrl: string) {
   }
 }
 
+export function navigate(url: string) {
+  const urlQuery = url.substring(23, 43);
+  // nav.navigate(payload, false, undefined, {}, undefined);
+  const injectedCode = `nav.navigate(
+    {commandMetadata: {
+      webCommandMetadata: { 
+        url: '${urlQuery}',
+        webPageType: 'WEB_PAGE_TYPE_WATCH',
+        rootVe: 3832 
+      },
+    },
+    watchEndpoint: {
+       videoId: '${urlQuery.substring(9, urlQuery.length)}', nofollow: true 
+      },
+  }, false, undefined, {}, undefined)`;
+  const script = document.createElement('script');
+  script.appendChild(document.createTextNode(`(${injectedCode})();`));
+  (document.body || document.head || document.documentElement).appendChild(script);
+}
 /**
  * Handles teardown of content script.
  * Clean up any listeners, sockets, visual components here.
