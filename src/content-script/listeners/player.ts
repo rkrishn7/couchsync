@@ -69,6 +69,13 @@ function addVideoListeners(player: HTMLVideoElement) {
   player.onpause = sendVideoEvent(VideoSocketEvents.VIDEO_PAUSE);
   player.onseeked = sendVideoEvent(VideoSocketEvents.VIDEO_SEEKED);
   player.onprogress = sendVideoEvent(VideoSocketEvents.VIDEO_PROGRESS);
+
+  setInterval(function sendProgressOnPause() {
+    const { isHost } = store.getState().party;
+    if (isHost && player.paused) {
+      sendVideoEvent(VideoSocketEvents.VIDEO_PROGRESS);
+    }
+  }, 1000);
 }
 
 function addVideoSocketListeners(player: HTMLVideoElement) {
