@@ -4,12 +4,24 @@ import http from '@root/lib/http';
 import store from '@contentScript/store';
 import socket from '@contentScript/socket';
 import { stringifyUrl } from 'query-string';
+import { debug } from '@root/lib/utils';
+
+/**
+ * Handles teardown of content script.
+ * Clean up any listeners, sockets, visual components here.
+ */
+export function teardown() {
+  const extensionRoot = document.getElementById('extension-panel-root');
+  if (extensionRoot) {
+    extensionRoot.style.display = 'none';
+  }
+}
+
 /**
  * Handles any page transition on the hosts side and notifies the server with a URL_CHANGE event
  */
 export function pageTransition(newUrl: string) {
   const state = store.getState();
-  console.log(state.party);
   if (state.party.isHost && state.party.id != null) {
     const newJoinUrl = stringifyUrl({
       url: newUrl,
@@ -27,6 +39,10 @@ export function pageTransition(newUrl: string) {
       partyHash: state.party.hash,
       newUrl: newJoinUrl,
     });
+  } else if (!state.party.isHost && !state.party.hostNav) {
+    debug(`LEAVING PARTY!`);
+    teardown();
+    socket.disconnect();
   }
 }
 
@@ -52,13 +68,5 @@ export function navigate(url: string) {
   script.appendChild(document.createTextNode(`(${injectedCode})();`));
   (document.body || document.head || document.documentElement).appendChild(script);
 }
-/**
- * Handles teardown of content script.
- * Clean up any listeners, sockets, visual components here.
- */
-export function teardown() {
-  const extensionRoot = document.getElementById('extension-panel-root');
-  if (extensionRoot) {
-    extensionRoot.style.display = 'none';
-  }
-}
+
+export function leaveParty()

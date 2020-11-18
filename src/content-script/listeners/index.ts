@@ -2,7 +2,7 @@ import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
 import { toggleChat } from '@contentScript/actions/chat';
 import { pageTransition, teardown } from '@contentScript/utils/transitions';
-import { joinParty, createNotification } from '@contentScript/actions/party';
+import { joinParty, createNotification, hostNav } from '@contentScript/actions/party';
 import { setUser } from '@contentScript/actions/user';
 import store from '@contentScript/store';
 import { attachToVideoPlayer } from './player';
@@ -26,6 +26,10 @@ window.addEventListener('message', event => {
     case WindowMessages.PAGE_UNLOAD:
       debug(event.data);
       teardown();
+      break;
+    case WindowMessages.PAGE_LOADED:
+      debug(event.data.name);
+      store.dispatch(hostNav(false));
       break;
     default:
       debug('Unknown Window Message Name');
@@ -51,6 +55,13 @@ function addNavigationListeners() {
    */
   window.addEventListener('beforeunload', function () {
     window.postMessage({ name: 'PAGE_UNLOAD' }, '*');
+  });
+  /**
+   * This event fires when the document is fully loaded
+   * Used to detect when someone leaves the party for another YT Vid
+   */
+  window.addEventListener('yt-navigate-finish', function () {
+    window.postMessage({ name: 'PAGE_LOADED' }, '*');
   });
 }
 
