@@ -19,6 +19,9 @@ window.addEventListener('message', event => {
       pageTransition(document.location.href);
       attachToVideoPlayer();
       break;
+    case WindowMessages.NAVIGATING:
+      debug(event.data.name);
+      break;
     case WindowMessages.PAGE_UNLOAD:
       debug(event.data);
       teardown();
@@ -39,6 +42,9 @@ function addNavigationListeners() {
    */
   window.addEventListener('yt-page-data-updated', function () {
     window.postMessage({ name: 'URL_CHANGE' }, '*');
+  });
+  window.addEventListener('yt-navigate-start', function () {
+    window.postMessage({ name: 'NAVIGATING' }, '*');
   });
   /**
    * This event fires before the document and page resources are unloaded
