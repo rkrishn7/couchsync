@@ -2,7 +2,7 @@ import { PartyActions, SocketEvents } from '@root/lib/constants';
 import { debug } from '@root/lib/utils/debug';
 import { Notification } from '@root/lib/types/notification';
 
-import { PartyState } from '@contentScript/reducers/party';
+import { PartyState, initialState } from '@contentScript/reducers/party';
 import socket from '@contentScript/socket';
 
 import { Dispatch } from 'redux';
@@ -23,7 +23,7 @@ export const markNotificationSeen = (notificationId: number) => {
   };
 };
 
-export const setParty = (details: PartyState) => {
+export const setParty = (details: PartyState = initialState) => {
   return {
     type: PartyActions.SET_PARTY,
     ...details,

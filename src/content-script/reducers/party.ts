@@ -13,7 +13,7 @@ export interface PartyState {
 
 type Action = { type: PartyActions } & Record<string, any>;
 
-const initialState: PartyState = {
+export const initialState: PartyState = {
   id: null,
   joinUrl: null,
   hash: null,

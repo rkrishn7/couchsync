@@ -1,5 +1,5 @@
 import { SocketEvents } from '@root/lib/constants';
-import { setParty } from '@contentScript/actions/party';
+import { createNotification, setParty } from '@contentScript/actions/party';
 import http from '@root/lib/http';
 import store from '@contentScript/store';
 import socket from '@contentScript/socket';
@@ -40,9 +40,17 @@ export function pageTransition(newUrl: string) {
       newUrl: newJoinUrl,
     });
   } else if (!state.party.isHost && !state.party.hostNav) {
-    debug(`LEAVING PARTY!`);
+    // TODO: Create alert asking if people want to leave party or stay
     teardown();
     socket.disconnect();
+    store.dispatch(
+      createNotification({
+        content: `Leaving party and navigating to new video!`,
+        title: `CouchSync`,
+        avatar: `https://avatars.dicebear.com/api/bottts/couchs.svg`,
+      })
+    );
+    store.dispatch(setParty());
   }
 }
 
@@ -68,5 +76,3 @@ export function navigate(url: string) {
   script.appendChild(document.createTextNode(`(${injectedCode})();`));
   (document.body || document.head || document.documentElement).appendChild(script);
 }
-
-export function leaveParty()
