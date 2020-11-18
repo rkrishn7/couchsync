@@ -21,6 +21,7 @@ window.addEventListener('message', event => {
       break;
     case WindowMessages.PAGE_UNLOAD:
       debug(event.data);
+      teardown();
       break;
     default:
       debug('Unknown Window Message Name');

@@ -62,6 +62,7 @@ socket.on(SocketEvents.NEW_HOST, ({ user }: any) => {
 
 socket.on(SocketEvents.URL_CHANGE, ({ data }: any) => {
   store.dispatch(setParty({ ...store.getState().party, joinUrl: data.newUrl }));
+  store.dispatch(hostNav());
   navigate(data.newUrl);
   // Dispatch new URL to store
   // Update chrome's current tabs

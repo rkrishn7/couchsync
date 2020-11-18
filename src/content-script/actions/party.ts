@@ -49,3 +49,9 @@ export const joinParty = ({ hash, isHost }: any) => {
     }
   };
 };
+
+export const hostNav = () => {
+  return {
+    type: PartyActions.HOST_NAV,
+  };
+};
