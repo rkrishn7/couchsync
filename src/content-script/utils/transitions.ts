@@ -9,6 +9,7 @@ import { stringifyUrl } from 'query-string';
  */
 export function pageTransition(newUrl: string) {
   const state = store.getState();
+  console.log(state.party);
   if (state.party.isHost && state.party.id != null) {
     const newJoinUrl = stringifyUrl({
       url: newUrl,
@@ -26,11 +27,6 @@ export function pageTransition(newUrl: string) {
       partyHash: state.party.hash,
       newUrl: newJoinUrl,
     });
-  } else if (!state.party.isHost) {
-    console.log('NON-HOST NAV');
-    console.log(newUrl);
-    // call leaveParty();
-    // socket.disconnect();
   }
 }
 

@@ -6,7 +6,7 @@ import { debug } from '@root/lib/utils/debug';
 
 import { navigate } from '@contentScript/utils/transitions';
 import store, { StoreState } from '@contentScript/store';
-import { updateUser, createNotification, setParty } from '@contentScript/actions/party';
+import { updateUser, createNotification, setParty, hostNav } from '@contentScript/actions/party';
 import { updateUserMessages } from '@contentScript/actions/chat';
 
 import { Dispatch } from 'redux';
@@ -62,6 +62,7 @@ socket.on(SocketEvents.NEW_HOST, ({ user }: any) => {
 
 socket.on(SocketEvents.URL_CHANGE, ({ data }: any) => {
   store.dispatch(setParty({ ...store.getState().party, joinUrl: data.newUrl }));
+  store.dispatch(hostNav(true));
   navigate(data.newUrl);
   // Dispatch new URL to store
   // Update chrome's current tabs

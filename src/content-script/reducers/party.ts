@@ -8,6 +8,7 @@ export interface PartyState {
   hash: string | null;
   users: any[];
   notifications: Notification[];
+  hostNav: boolean;
 }
 
 type Action = { type: PartyActions } & Record<string, any>;
@@ -19,6 +20,7 @@ const initialState: PartyState = {
   isHost: false,
   users: [],
   notifications: [],
+  hostNav: false,
 };
 
 const party = (state: PartyState = initialState, action: Action): PartyState => {
@@ -64,6 +66,11 @@ const party = (state: PartyState = initialState, action: Action): PartyState => 
       return {
         ...state,
         notifications: state.notifications.map(n => (n.id === action.notificationId ? { ...n, seen: true } : n)),
+      };
+    case PartyActions.HOST_NAV:
+      return {
+        ...state,
+        hostNav: !state.hostNav,
       };
     default:
       return state;

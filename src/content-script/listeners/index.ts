@@ -13,14 +13,15 @@ import { attachToVideoPlayer } from './player';
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
  */
 window.addEventListener('message', event => {
+  const state = store.getState();
   switch (event.data.name) {
     case WindowMessages.URL_CHANGE:
       debug(event.data.name);
+      if (!state.party.isHost && !state.party.hostNav) {
+        debug(`NON HOST NAV`);
+      }
       pageTransition(document.location.href);
       attachToVideoPlayer();
-      break;
-    case WindowMessages.NAVIGATING:
-      debug(event.data.name);
       break;
     case WindowMessages.PAGE_UNLOAD:
       debug(event.data);
@@ -42,9 +43,6 @@ function addNavigationListeners() {
    */
   window.addEventListener('yt-page-data-updated', function () {
     window.postMessage({ name: 'URL_CHANGE' }, '*');
-  });
-  window.addEventListener('yt-navigate-start', function () {
-    window.postMessage({ name: 'NAVIGATING' }, '*');
   });
   /**
    * This event fires before the document and page resources are unloaded
