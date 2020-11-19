@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faLaughBeam, faBellSlash } from '@fortawesome/free-solid-svg-icons';
 
 import { connect, ConnectedProps } from 'react-redux';
-import { sendMessage } from '@contentScript/actions/chat';
+import { sendMessage, toggleNotifications } from '@contentScript/actions/chat';
 import { StoreState } from '@contentScript/store';
 
 const Container = styled(Card)`
@@ -31,7 +31,11 @@ const ChatInput = styled(Input)`
   outline: none;
 `;
 
-const ToolbarButton = styled.button`
+interface ToolbarButtonProps {
+  selected?: boolean;
+}
+
+const ToolbarButton = styled.button<ToolbarButtonProps>`
   width: 30px;
   height: 30px;
   margin-right: 5px;
@@ -42,7 +46,7 @@ const ToolbarButton = styled.button`
   background-color: transparent;
   border: none;
   outline: none;
-  color: #909090;
+  color: ${p => (p.selected ? p.theme.colors.secondary : '#909090')};
   transition: all 0.2s ease-in-out;
   &:active {
     transform: scale(0.9);
@@ -56,18 +60,20 @@ const ToolbarButton = styled.button`
 const mapState = (state: StoreState) => {
   return {
     chatEnabled: state.chat.enabled,
+    notificationsEnabled: state.chat.notificationsEnabled,
   };
 };
 
 const mapDispatch = {
   sendMessage: (content: string) => sendMessage(content),
+  toggleNotifications,
 };
 
 const connector = connect(mapState, mapDispatch);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage }) => {
+const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificationsEnabled, toggleNotifications }) => {
   const [message, setMessage] = useState<string | null>(null);
 
   const handleSendMessage = () => {
@@ -95,7 +101,7 @@ const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage }) => {
               <FontAwesomeIcon icon={faLaughBeam} size="lg" />
             </ToolbarButton>
             {/* Mute Notifications */}
-            <ToolbarButton>
+            <ToolbarButton selected={!notificationsEnabled} onClick={toggleNotifications}>
               <FontAwesomeIcon icon={faBellSlash} size="lg" />
             </ToolbarButton>
           </Flex>

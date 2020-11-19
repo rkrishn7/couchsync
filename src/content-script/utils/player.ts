@@ -1,10 +1,11 @@
-import { debug } from '@root/lib/utils';
 import socket from '@contentScript/socket';
 import store from '@contentScript/store';
+
 import { SocketEvents, VideoSocketEvents } from '@root/lib/constants/socket';
 import { VideoEvent, VideoEventData } from '@root/lib/types/video';
 import { MAX_DESYNC_SEC } from '@root/lib/constants/video';
 import { SupportedPlatforms } from '@root/lib/types';
+import { debug } from '@root/lib/utils';
 
 // functions for each platform that can be run to get their video
 const videoLocators = {

@@ -6,7 +6,7 @@ export * from './debug';
  * object as the page they're running on
  * @param fn
  */
-export const inject = (fn: () => void) => {
+export const inject = (fn: (() => void) | string) => {
   const script = document.createElement('script');
   script.text = `(${fn.toString()})();`;
   document.documentElement.appendChild(script);

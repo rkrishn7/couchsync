@@ -5,6 +5,13 @@ import { setPopupView } from '@popup/actions/popup';
 import { PartyState } from '@popup/reducers/party';
 import { Dispatch } from 'redux';
 
+export const updateUser = (user: any) => {
+  return {
+    type: PartyActions.UPDATE_USER,
+    user,
+  };
+};
+
 export const setParty = (details: PartyState) => {
   return {
     type: PartyActions.SET_PARTY,

@@ -1,57 +1,24 @@
 import React, { useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Flex, Text } from 'rebass';
-import { Input } from '@rebass/forms';
-
-import styled from '@root/style/styled';
-
-import { StoreState } from '@popup/store';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboard, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
+import { faClipboard, faClipboardCheck, faUserPlus, faUsers, faCog } from '@fortawesome/free-solid-svg-icons';
+
+import styled from '@root/style/styled';
+import theme from '@root/style/theme';
+
+import { StoreState } from '@popup/store';
+import { Input } from '@popup/components/input';
+import { IconButton } from '@popup/components/icon-button';
+
+import { Profile } from './profile';
+import { UserList } from './user-list';
 
 const Container = styled(Flex)`
   flex-direction: column;
   min-width: 100%;
-  padding: ${p => p.theme.space[2]}px;
-`;
-
-const RoomDisplay = styled(Input)`
-  flex: 1;
-  border-radius: ${p => p.theme.radii[2]}px;
-  font-size: 14px;
-  margin-top: ${p => p.theme.space[2]}px;
-  font-family: ${p => p.theme.fonts.body};
-  border-color: ${p => p.theme.colors.greyLight};
-  &:hover {
-    border-color: ${p => p.theme.colors.greyDark};
-  }
-  &:focus {
-    border-color: ${p => p.theme.colors.secondary};
-  }
-  outline: none;
-`;
-
-const CopyButton = styled.button`
-  width: 40px;
-  height: 40px;
-  margin-right: ${p => p.theme.space[2]}px;
-  margin-left: ${p => p.theme.space[2]}px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  color: ${p => p.theme.colors.secondary};
-  transition: all 0.2s ease-in-out;
-  &:active {
-    transform: scale(0.9);
-  }
-  &:hover {
-    cursor: pointer;
-    color: ${p => p.theme.colors.secondary};
-  }
 `;
 
 const mapState = (state: StoreState) => {
@@ -78,17 +45,43 @@ const ActiveParty: React.FC<ReduxProps> = ({ joinUrl }) => {
 
   return (
     <Container>
-      <Text fontSize={2} textAlign="center">
-        Share the code with your friends
-      </Text>
-      {joinUrl && (
-        <Flex flexDirection="row" alignItems="center">
-          <RoomDisplay value={joinUrl} readOnly ref={roomDisplayRef} />
-          <CopyButton onClick={handleCopyClick}>
-            <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
-          </CopyButton>
-        </Flex>
-      )}
+      <Tabs>
+        <TabList>
+          <Tab>
+            <FontAwesomeIcon icon={faUserPlus} size="lg" />
+          </Tab>
+          <Tab>
+            <FontAwesomeIcon icon={faUsers} size="lg" />
+          </Tab>
+          <Tab>
+            <FontAwesomeIcon icon={faCog} size="lg" />
+          </Tab>
+        </TabList>
+        {/* Join Link */}
+        <TabPanel>
+          {joinUrl && (
+            <Flex flexDirection="column">
+              <Text fontSize={1} color="greyDark" ml={1} mb={1} fontWeight={700}>
+                join url
+              </Text>
+              <Flex flexDirection="row" alignItems="center">
+                <Input value={joinUrl} readOnly ref={roomDisplayRef} />
+                <IconButton onClick={handleCopyClick} style={{ marginLeft: theme.space[1] }}>
+                  <FontAwesomeIcon icon={copiedJoinUrl ? faClipboardCheck : faClipboard} size="2x" />
+                </IconButton>
+              </Flex>
+            </Flex>
+          )}
+        </TabPanel>
+        {/* Party Users */}
+        <TabPanel>
+          <UserList />
+        </TabPanel>
+        {/* Profile Settings */}
+        <TabPanel>
+          <Profile />
+        </TabPanel>
+      </Tabs>
     </Container>
   );
 };
