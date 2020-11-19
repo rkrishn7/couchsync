@@ -2,7 +2,7 @@ import { PartyActions, SocketEvents } from '@root/lib/constants';
 import { debug } from '@root/lib/utils/debug';
 import { Notification } from '@root/lib/types/notification';
 
-import { PartyState, initialState } from '@contentScript/reducers/party';
+import { PartyState } from '@contentScript/reducers/party';
 import socket from '@contentScript/socket';
 
 import { Dispatch } from 'redux';
@@ -23,10 +23,17 @@ export const markNotificationSeen = (notificationId: number) => {
   };
 };
 
-export const setParty = (details: PartyState = initialState) => {
+export const setParty = (details: PartyState) => {
   return {
     type: PartyActions.SET_PARTY,
     ...details,
+  };
+};
+
+export const setJoinUrl = (url: string) => {
+  return {
+    type: PartyActions.SET_JOIN_URL,
+    url,
   };
 };
 
@@ -40,6 +47,7 @@ export const updateUser = (user: any) => {
 export const joinParty = ({ hash, isHost }: any) => {
   return (dispatch: Dispatch) => {
     try {
+      socket.connect();
       socket.emit(SocketEvents.JOIN_PARTY, { partyHash: hash }, ({ party, user }: any) => {
         dispatch(setParty({ isHost, ...party }));
         dispatch(setUser({ ...user }));
@@ -47,12 +55,5 @@ export const joinParty = ({ hash, isHost }: any) => {
     } catch (error) {
       debug(error.message);
     }
-  };
-};
-
-export const hostNav = (status: boolean) => {
-  return {
-    type: PartyActions.HOST_NAV,
-    status,
   };
 };

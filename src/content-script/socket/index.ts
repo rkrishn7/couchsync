@@ -4,14 +4,16 @@ import settings from '@root/lib/settings';
 import { ChatActions, SocketEvents, PartyActions } from '@root/lib/constants';
 import { debug } from '@root/lib/utils/debug';
 
-import { navigate } from '@contentScript/utils/transitions';
+import { navigateToUrl } from '@contentScript/utils/transitions';
 import store, { StoreState } from '@contentScript/store';
-import { updateUser, createNotification, setParty, hostNav } from '@contentScript/actions/party';
+import { updateUser, createNotification, setJoinUrl } from '@contentScript/actions/party';
 import { updateUserMessages } from '@contentScript/actions/chat';
 
 import { Dispatch } from 'redux';
 
-const socket = io(settings.apiUrl);
+const socket = io(settings.apiUrl, {
+  autoConnect: false,
+});
 
 socket.on(SocketEvents.CONNECT, () => debug('socket connected'));
 
@@ -60,12 +62,9 @@ socket.on(SocketEvents.NEW_HOST, ({ user }: any) => {
   });
 });
 
-socket.on(SocketEvents.URL_CHANGE, ({ data }: any) => {
-  store.dispatch(setParty({ ...store.getState().party, joinUrl: data.newUrl }));
-  store.dispatch(hostNav(true));
-  navigate(data.newUrl);
-  // Dispatch new URL to store
-  // Update chrome's current tabs
+socket.on(SocketEvents.URL_CHANGE, ({ data: { newUrl } }: any) => {
+  store.dispatch(setJoinUrl(newUrl));
+  navigateToUrl(newUrl);
 });
 
 export default socket;
