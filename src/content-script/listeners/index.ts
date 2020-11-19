@@ -30,14 +30,6 @@ window.addEventListener('load', attachToVideoPlayer);
 // CANNOT REFERENCE ANY VARIABLES FROM OUTER SCOPE (They will not resolve)
 function addNavigationListeners() {
   /**
-   * This event fires before the document and page resources are unloaded
-   * (e.g. before we leave/reload a page)
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
-   */
-  window.addEventListener('beforeunload', function () {
-    return 'u sure bra?';
-  });
-  /**
    * This event fires when the document is fully loaded
    * Used to detect when someone leaves the party for another YT Vid
    */
