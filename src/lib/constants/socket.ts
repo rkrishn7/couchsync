@@ -5,6 +5,7 @@ export enum SocketEvents {
   CREATE_PARTY = 'create_party',
   JOIN_PARTY = 'join_party',
   VIDEO_EVENT = 'video_event',
+  URL_CHANGE = 'url_change',
   USER_JOINED_PARTY = 'user_joined_party',
   USER_LEFT_PARTY = 'user_left_party',
   NEW_HOST = 'new_host',

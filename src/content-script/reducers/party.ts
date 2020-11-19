@@ -32,6 +32,11 @@ const party = (state: PartyState = initialState, action: Action): PartyState => 
         id: action.id,
         users: action.users,
       };
+    case PartyActions.SET_JOIN_URL:
+      return {
+        ...state,
+        joinUrl: action.url,
+      };
     case PartyActions.ADD_USER:
       return {
         ...state,

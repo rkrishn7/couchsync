@@ -30,6 +30,13 @@ export const setParty = (details: PartyState) => {
   };
 };
 
+export const setJoinUrl = (url: string) => {
+  return {
+    type: PartyActions.SET_JOIN_URL,
+    url,
+  };
+};
+
 export const updateUser = (user: any) => {
   return {
     type: PartyActions.UPDATE_USER,
@@ -40,6 +47,7 @@ export const updateUser = (user: any) => {
 export const joinParty = ({ hash, isHost }: any) => {
   return (dispatch: Dispatch) => {
     try {
+      socket.connect();
       socket.emit(SocketEvents.JOIN_PARTY, { partyHash: hash }, ({ party, user }: any) => {
         dispatch(setParty({ isHost, ...party }));
         dispatch(setUser({ ...user }));

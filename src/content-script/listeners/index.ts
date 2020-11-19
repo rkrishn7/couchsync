@@ -1,10 +1,11 @@
 import { ChromeRuntimeMessages, WindowMessages } from '@root/lib/constants';
 import { debug, inject } from '@root/lib/utils';
-import { toggleChat } from '@contentScript/actions/chat';
+
+import { onPageNavigate } from '@contentScript/utils/transitions';
 import { joinParty, createNotification } from '@contentScript/actions/party';
 import { setUser } from '@contentScript/actions/user';
 import store from '@contentScript/store';
-import { attachToVideoPlayer } from './player';
+import { attachToVideoPlayer } from '@contentScript/utils/player';
 
 /**
  * Our content script has a different browsing context than that of the current webpage
@@ -12,16 +13,15 @@ import { attachToVideoPlayer } from './player';
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
  */
 window.addEventListener('message', event => {
+  debug(event.data);
   switch (event.data.name) {
     case WindowMessages.URL_CHANGE:
-      debug(event.data.name);
+      onPageNavigate();
       attachToVideoPlayer();
-      break;
-    case WindowMessages.PAGE_UNLOAD:
-      debug(event.data);
       break;
     default:
       debug('Unknown Window Message Name');
+      break;
   }
 });
 
@@ -30,20 +30,11 @@ window.addEventListener('load', attachToVideoPlayer);
 // CANNOT REFERENCE ANY VARIABLES FROM OUTER SCOPE (They will not resolve)
 function addNavigationListeners() {
   /**
-   * This appears to be the name of the event triggered when we navigate client-side
-   * on Youtube
-   * @see https://stackoverflow.com/a/54389066
+   * This event fires when the document is fully loaded
+   * Used to detect when someone leaves the party for another YT Vid
    */
-  window.addEventListener('yt-page-data-updated', function () {
+  window.addEventListener('yt-navigate-finish', function () {
     window.postMessage({ name: 'URL_CHANGE' }, '*');
-  });
-  /**
-   * This event fires before the document and page resources are unloaded
-   * (e.g. before we leave/reload a page)
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
-   */
-  window.addEventListener('beforeunload', function () {
-    window.postMessage({ name: 'PAGE_UNLOAD' }, '*');
   });
 }
 
@@ -54,27 +45,9 @@ function addNavigationListeners() {
   inject(addNavigationListeners);
 })();
 
-/**
- * Handles teardown of content script.
- * Clean up any listeners, sockets, visual components here.
- */
-function teardown() {
-  const extensionRoot = document.getElementById('extension-panel-root');
-  if (extensionRoot) {
-    extensionRoot.style.display = 'none';
-  }
-}
-
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: any, _sender, sendResponse) => {
   const storeState = store.getState();
   switch (message.name) {
-    case ChromeRuntimeMessages.HIDE_CONTENT_SCRIPT_HTML:
-      teardown();
-      break;
-    case ChromeRuntimeMessages.TOGGLE_CHAT:
-      store.dispatch(toggleChat());
-      sendResponse();
-      break;
     case ChromeRuntimeMessages.GET_PARTY_DETAILS: {
       sendResponse({
         data: storeState.party,
@@ -94,14 +67,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       break;
     }
     case ChromeRuntimeMessages.JOIN_PARTY: {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       store.dispatch(joinParty(message.data!));
       break;
     }
     case ChromeRuntimeMessages.ADD_NOTIFICATION: {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       store.dispatch(createNotification(message.data!.notification));
       break;
     }

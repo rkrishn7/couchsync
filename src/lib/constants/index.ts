@@ -1,5 +1,6 @@
 export * from './chrome';
 export * from './chat';
+export * from './content-script';
 export * from './popup';
 export * from './party';
 export * from './socket';

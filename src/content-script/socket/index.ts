@@ -4,13 +4,16 @@ import settings from '@root/lib/settings';
 import { ChatActions, SocketEvents, PartyActions } from '@root/lib/constants';
 import { debug } from '@root/lib/utils/debug';
 
+import { navigateToUrl } from '@contentScript/utils/transitions';
 import store, { StoreState } from '@contentScript/store';
-import { updateUser, createNotification } from '@contentScript/actions/party';
+import { updateUser, createNotification, setJoinUrl } from '@contentScript/actions/party';
 import { updateUserMessages } from '@contentScript/actions/chat';
 
 import { Dispatch } from 'redux';
 
-const socket = io(settings.apiUrl);
+const socket = io(settings.apiUrl, {
+  autoConnect: false,
+});
 
 socket.on(SocketEvents.CONNECT, () => debug('socket connected'));
 
@@ -57,6 +60,11 @@ socket.on(SocketEvents.NEW_HOST, ({ user }: any) => {
       isHost: state.user.id === user.id,
     });
   });
+});
+
+socket.on(SocketEvents.URL_CHANGE, ({ data: { newUrl } }: any) => {
+  store.dispatch(setJoinUrl(newUrl));
+  navigateToUrl(newUrl);
 });
 
 export default socket;
