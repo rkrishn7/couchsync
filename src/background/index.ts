@@ -1,5 +1,5 @@
-import { ChromeRuntimeMessages } from '@root/lib/constants';
-import { isValidExtensionUrl } from '@root/lib/utils';
+// import { ChromeRuntimeMessages } from '@root/lib/constants';
+// import { isValidExtensionUrl } from '@root/lib/utils';
 /**
  * More information on background scripts
  * @see https://developer.chrome.com/extensions/background_pages
@@ -11,6 +11,8 @@ import { isValidExtensionUrl } from '@root/lib/utils';
  * - `onCompleted` is fired when a document + all its resources are loaded
  * @see https://developer.chrome.com/extensions/webNavigation
  */
+
+/*
 type WebNavigationEvent = 'onHistoryStateUpdated' | 'onCompleted';
 
 const navigationEvents: WebNavigationEvent[] = ['onHistoryStateUpdated', 'onCompleted'];
@@ -25,3 +27,4 @@ navigationEvents.forEach(evt =>
     }
   })
 );
+*/
