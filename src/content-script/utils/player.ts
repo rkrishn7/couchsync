@@ -1,7 +1,9 @@
 import socket from '@contentScript/socket';
 import store from '@contentScript/store';
 
-import { SocketEvents, VideoSocketEvents } from '@root/lib/constants/socket';
+import { parseUrl } from 'query-string';
+import { navigateToUrl } from '@contentScript/utils/transitions';
+import { SocketEvents } from '@root/lib/constants/socket';
 import { VideoEvent, VideoEventData } from '@root/lib/types/video';
 import { MAX_DESYNC_SEC } from '@root/lib/constants/video';
 import { SupportedPlatforms } from '@root/lib/types';
@@ -43,47 +45,65 @@ function findVideoPlayer(): HTMLVideoElement | null {
   return player;
 }
 
+function getPlayerInfo(player: HTMLVideoElement): VideoEventData {
+  const videoId = parseUrl(document.location.href).query.v;
+  const { paused, currentTime, duration, playbackRate } = player;
+  return { paused, currentTime, duration, playbackRate, videoId };
+}
+
 function addVideoListeners(player: HTMLVideoElement) {
   // TODO: Once implemented, include communism/facism check
-  function sendVideoEvent(socketEvent: VideoSocketEvents) {
-    return (event: any) => {
-      const state = store.getState();
-      const { isHost, hash } = state.party;
+  function sendVideoEvent() {
+    const state = store.getState();
+    const { isHost, hash } = state.party;
 
-      // if party not created, don't send anything
-      if (!hash) return;
+    // if party not created, don't send anything
+    if (!hash) return;
 
-      // construct payload
-      const { paused, currentTime, duration, playbackRate } = event.target;
-      const eventData: VideoEventData = { eventType: socketEvent, paused, currentTime, playbackRate, duration };
-      const payload: VideoEvent = { partyHash: hash, eventData };
+    // construct payload
+    const eventData: VideoEventData = getPlayerInfo(player);
+    eventData.isHost = isHost;
+    const payload: VideoEvent = { partyHash: hash, eventData };
 
-      // send payload
-      if (isHost) {
-        debug(`Host emitting ${socketEvent}`);
-        socket.emit(SocketEvents.VIDEO_EVENT, payload);
-      }
-    };
+    // send payload
+    if (isHost) {
+      socket.emit(SocketEvents.VIDEO_EVENT, payload);
+    }
   }
 
-  player.onplay = sendVideoEvent(VideoSocketEvents.VIDEO_PLAY);
-  player.onpause = sendVideoEvent(VideoSocketEvents.VIDEO_PAUSE);
-  player.onseeked = sendVideoEvent(VideoSocketEvents.VIDEO_SEEKED);
-  player.onprogress = sendVideoEvent(VideoSocketEvents.VIDEO_PROGRESS);
+  player.onplay = sendVideoEvent;
+  player.onpause = sendVideoEvent;
+  player.onseeked = sendVideoEvent;
+
+  setInterval(function sendProgressOnPause() {
+    sendVideoEvent();
+  }, 1000);
 }
 
 function addVideoSocketListeners(player: HTMLVideoElement) {
-  socket.on(SocketEvents.VIDEO_EVENT, (data: VideoEventData) => {
+  socket.on(SocketEvents.VIDEO_EVENT, (hostPlayer: VideoEventData) => {
+    // ignore non-host payloads
+    if (!hostPlayer.isHost) return;
+
+    // get current user's player data
+    const clientPlayer = getPlayerInfo(player);
+
     // match player play/pause state
-    if (data.paused) player.pause();
+    if (hostPlayer.paused) player.pause();
     else player.play();
 
     // match player playback speed
-    player.playbackRate = data.playbackRate;
+    player.playbackRate = hostPlayer.playbackRate;
 
     // resync if needed and not host. handles seek events
-    if (Math.abs(player.currentTime - data.currentTime) > MAX_DESYNC_SEC) {
-      player.currentTime = data.currentTime;
+    if (Math.abs(player.currentTime - hostPlayer.currentTime) > MAX_DESYNC_SEC) {
+      player.currentTime = hostPlayer.currentTime;
+    }
+
+    // match player videos
+    if (clientPlayer.videoId !== hostPlayer.videoId) {
+      const roomId = parseUrl(document.location.href).query.couchSyncRoomId;
+      navigateToUrl(`youtube.com/watch?v=${hostPlayer.videoId}&couchSyncRoomId=${roomId}`);
     }
   });
 }
