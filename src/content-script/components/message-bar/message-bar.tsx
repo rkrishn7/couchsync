@@ -75,9 +75,20 @@ type ReduxProps = ConnectedProps<typeof connector>;
 
 const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificationsEnabled, toggleNotifications }) => {
   const [message, setMessage] = useState<string | null>(null);
+  const inputElem = document.getElementById('chatInput');
 
   const handleSendMessage = () => {
-    if (message) sendMessage(message);
+    if (message) {
+      sendMessage(message);
+      inputElem.value = "";
+    }
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if(event.key === 'Enter'){
+      event.preventDefault();
+      handleSendMessage();
+    }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +99,7 @@ const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificati
     <Container>
       <Flex flexDirection="column">
         <Flex flexDirection="row">
-          <ChatInput placeholder="send a message..." onChange={handleInputChange} />
+          <ChatInput placeholder="send a message..." id={"chatInput"} onChange={handleInputChange} onKeyPress={handleKeyPress} />
           {/* Send Message */}
           <ToolbarButton>
             <FontAwesomeIcon icon={faPaperPlane} size="lg" onClick={handleSendMessage} />
