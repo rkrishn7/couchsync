@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Flex } from 'rebass';
 import styled from '@root/style/styled';
 
@@ -23,11 +23,24 @@ const connector = connect(mapState);
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const MessageList: React.FC<ReduxProps> = ({ messages }) => {
+  const messagesEndRef = useRef(null);
+
+  if(messagesEndRef){
+    const scrollToBottom = () => {
+      messagesEndRef.current.scrollIntoView({behavior: "auto"});
+    }
+
+    if(true){
+      useEffect(scrollToBottom, [messages]);
+    }
+  }
+
   return (
     <Container>
       {messages?.map(({ content, isOwnMessage, user }) => (
         <MessageCell message={content} isOwnMessage={isOwnMessage} userName={user.name} avatarUrl={user.avatarUrl} />
       ))}
+      <div ref={messagesEndRef} />
     </Container>
   );
 };

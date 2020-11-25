@@ -75,12 +75,13 @@ type ReduxProps = ConnectedProps<typeof connector>;
 
 const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificationsEnabled, toggleNotifications }) => {
   const [message, setMessage] = useState<string | null>(null);
-  const inputElem = document.getElementById('chatInput');
+  const inputRef = document.getElementById('chatInput');
 
   const handleSendMessage = () => {
     if (message) {
       sendMessage(message);
-      inputElem.value = "";
+      inputRef.value = "";
+      setMessage("");
     }
   };
 
