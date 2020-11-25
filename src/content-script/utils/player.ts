@@ -45,28 +45,44 @@ function findVideoPlayer(): HTMLVideoElement | null {
   return player;
 }
 
-function getPlayerInfo(player: HTMLVideoElement): VideoEventData {
-  const videoId = parseUrl(document.location.href).query.v;
+function getPlayerInfo(player: HTMLVideoElement): VideoEvent {
+  // collect player info
   const { paused, currentTime, duration, playbackRate } = player;
-  return { paused, currentTime, duration, playbackRate, videoId };
+
+  // collect url
+  let videoId = parseUrl(document.location.href).query.v;
+  if (!videoId) videoId = 'null';
+  if (Array.isArray(videoId)) [videoId] = videoId;
+
+  // collect host and hash
+  // const state = store.getState();
+  let { isHost, hash } = store.getState().party;
+  if (!hash) hash = '';
+  if (!isHost) isHost = false;
+
+  const eventData = {
+    paused,
+    currentTime,
+    duration,
+    playbackRate,
+    videoId,
+    isHost,
+  };
+
+  return { partyHash: hash, eventData };
 }
 
 function addVideoListeners(player: HTMLVideoElement) {
   // TODO: Once implemented, include communism/facism check
   function sendVideoEvent() {
-    const state = store.getState();
-    const { isHost, hash } = state.party;
+    // construct payload
+    const payload: VideoEvent = getPlayerInfo(player);
 
     // if party not created, don't send anything
-    if (!hash) return;
+    if (!payload.partyHash) return;
 
-    // construct payload
-    const eventData: VideoEventData = getPlayerInfo(player);
-    eventData.isHost = isHost;
-    const payload: VideoEvent = { partyHash: hash, eventData };
-
-    // send payload
-    if (isHost) {
+    // send payload if host
+    if (payload.eventData.isHost) {
       socket.emit(SocketEvents.VIDEO_EVENT, payload);
     }
   }
@@ -86,7 +102,7 @@ function addVideoSocketListeners(player: HTMLVideoElement) {
     if (!hostPlayer.isHost) return;
 
     // get current user's player data
-    const clientPlayer = getPlayerInfo(player);
+    const clientPlayer = getPlayerInfo(player).eventData;
 
     // match player play/pause state
     if (hostPlayer.paused) player.pause();
