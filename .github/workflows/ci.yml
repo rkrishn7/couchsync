@@ -17,6 +17,7 @@ jobs:
           CI: true
       - run: yarn build
   publish:
+    name: Publish to Chrome Web Store
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'release')
