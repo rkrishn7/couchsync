@@ -1,11 +1,12 @@
 import { merge } from 'lodash';
 
+type Stage = 'production' | 'development' | 'test';
+
 const SettingsDefault = {
   brandName: 'couchsync',
   apiUrl: 'http://localhost:8000',
+  stage: process.env.NODE_ENV as Stage,
 };
-
-type Stage = 'production' | 'development' | 'test';
 
 const SettingsStage: Record<Stage, any> = {
   production: {
@@ -15,4 +16,4 @@ const SettingsStage: Record<Stage, any> = {
   test: {},
 };
 
-export default merge(SettingsDefault, SettingsStage[process.env.NODE_ENV]);
+export default merge(SettingsDefault, SettingsStage[process.env.NODE_ENV]) as typeof SettingsDefault;

@@ -42,6 +42,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'off',
     'no-use-before-define': 'off',
     'no-case-declarations': 'off',
+    'global-require': 'off',
     'no-empty': 0,
     'no-unused-vars': 'off',
     'no-console': 'off',
