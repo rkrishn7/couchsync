@@ -18,17 +18,17 @@ type CellProps = Pick<MessageCellProps, 'isOwnMessage'>;
 
 const Cell = styled(Box)<CellProps>`
   min-height: 30px;
-  width: 100%;
-  border-radius: ${p => p.theme.radii[2]}px;
-  border-top-left-radius: ${p => (p.isOwnMessage ? p.theme.radii[2] : 0)}px;
-  border-top-right-radius: ${p => p.theme.radii[2]}px;
-  border-bottom-right-radius: ${p => (p.isOwnMessage ? 0 : p.theme.radii[2])}px;
-  border-bottom-left-radius: ${p => p.theme.radii[2]}px;
-  background-color: ${p => (p.isOwnMessage ? p.theme.colors.secondary : p.theme.colors.primary)};
+  border-top-left-radius: ${p => (p.isOwnMessage ? p.theme.radii[3] : p.theme.radii[1])}px;
+  border-top-right-radius: ${p => p.theme.radii[3]}px;
+  border-bottom-right-radius: ${p => (p.isOwnMessage ? p.theme.radii[1] : p.theme.radii[3])}px;
+  border-bottom-left-radius: ${p => p.theme.radii[3]}px;
+  background-color: ${p => (p.isOwnMessage ? p.theme.colors.primary : p.theme.colors.greyMid)};
   padding: 5px;
-  font-size: 16px;
+  padding-left: ${p => (p.isOwnMessage ? 0 : p.theme.space[2])}px;
+  padding-right: ${p => (p.isOwnMessage ? p.theme.space[2] : 0)}px;
+  font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: ${p => (p.isOwnMessage ? 'white' : p.theme.colors.greyDarkest)};
   word-wrap: break-word;
   text-align: ${p => (p.isOwnMessage ? 'right' : 'left')};
   box-shadow: ${p => (p.isOwnMessage ? '-' : '')}10px 11px 20px -12px rgba(0, 0, 0, 0.75);

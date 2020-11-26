@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Card, Flex } from 'rebass';
 import { Input } from '@rebass/forms';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLaughBeam, faBellSlash } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faLaughBeam, faBellSlash } from '@fortawesome/free-solid-svg-icons';
 import ReactTooltip from 'react-tooltip';
 
 import styled from '@root/style/styled';
@@ -32,6 +32,7 @@ const ChatInput = styled(Input)`
     border-color: ${p => p.theme.colors.secondary};
   }
   outline: none;
+  transition: all 0.2s ease-in-out;
 `;
 
 interface ToolbarButtonProps {
@@ -63,13 +64,13 @@ const ToolbarButton = styled.button<ToolbarButtonProps>`
 const EmojiButton = styled.button`
   width: 30px;
   height: 30px;
-  margin-left: 3px;
-  margin-right: 3px;
+  margin-left: 5px;
+  margin-right: 5px;
   background-color: transparent;
   border: none;
   outline: none;
   font-size: 22px;
-  transition: all 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   &:active {
     transform: scale(0.9);
   }
@@ -99,19 +100,22 @@ const EMOJIS = ['😁', '😂', '😫', '😡', '🙂'];
 const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificationsEnabled, toggleNotifications }) => {
   const [message, setMessage] = useState<string>('');
 
-  const handleSubmit = (e: React.KeyboardEvent) => {
-    if (e.key !== 'Enter') return;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
+  };
 
-    e.preventDefault();
-
+  const handleSendMessage = () => {
     if (message) {
       sendMessage(message);
       setMessage('');
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value);
+  const handleSubmit = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Enter') return;
+
+    e.preventDefault();
+    handleSendMessage();
   };
 
   const handleEmojiClick = (val: string) => setMessage(`${message} ${val} `);
@@ -126,11 +130,14 @@ const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificati
             value={message}
             onKeyPress={handleSubmit}
           />
+          <ToolbarButton onClick={handleSendMessage}>
+            <FontAwesomeIcon icon={faPaperPlane} size="lg" />
+          </ToolbarButton>
         </Flex>
         <Flex justifyContent="space-between" alignItems="center">
           <Flex flexDirection="row">
             {/* Emojis */}
-            <ToolbarButton data-tip data-for="happyFace">
+            <ToolbarButton data-tip data-for="emoji-container" data-event="click">
               <FontAwesomeIcon icon={faLaughBeam} size="lg" />
             </ToolbarButton>
             {/* Mute Notifications */}
@@ -139,12 +146,14 @@ const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificati
             </ToolbarButton>
 
             <ReactTooltip
-              id="happyFace"
-              place="right"
+              id="emoji-container"
+              place="bottom"
               effect="solid"
-              delayUpdate={500}
-              delayHide={500}
-              backgroundColor={theme.colors.primary}>
+              arrowColor="white"
+              clickable
+              border
+              borderColor={theme.colors.secondary}
+              className="couchsync-tooltip__container">
               {EMOJIS.map((val, i) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <EmojiButton key={i} onClick={() => handleEmojiClick(val)}>

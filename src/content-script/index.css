@@ -19,6 +19,14 @@ code {
   z-index: 2147483647;
 }
 
+.couchsync-tooltip__container {
+  font-size: 20px !important;
+  padding: 3px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  background-color: white !important;
+}
+
 .react-toast-notifications__container {
   z-index: 2147483647 !important;
 }
