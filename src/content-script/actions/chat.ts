@@ -4,6 +4,7 @@ import socket from '@contentScript/socket';
 import { StoreState } from '@contentScript/store';
 
 import { Dispatch } from 'redux';
+import moment from 'moment';
 
 export const sendMessage = (content: string) => {
   return (dispatch: Dispatch, getState: () => StoreState) => {
@@ -13,7 +14,7 @@ export const sendMessage = (content: string) => {
       content,
       partyId: state.party.id,
       partyHash: state.party.hash,
-      sentAt: new Date(),
+      sentAt: moment(),
     };
 
     socket.emit(SocketEvents.SEND_MESSAGE, messageData, ({ message }: any) => {

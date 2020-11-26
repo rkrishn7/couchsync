@@ -1,7 +1,8 @@
 import { applyMiddleware, createStore, combineReducers } from 'redux';
-import { ContentScriptActions } from '@root/lib/constants';
-import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
+
+import { ContentScriptActions } from '@root/lib/constants';
+import Settings from '@root/lib/settings';
 import * as reducers from '@contentScript/reducers';
 
 const rootReducer = (state: any, action: any) => {
@@ -13,9 +14,18 @@ const rootReducer = (state: any, action: any) => {
   return root(state, action);
 };
 
-// Middleware
-const logger = createLogger();
+const constructMiddleware = () => {
+  let middleware = [thunk];
 
-export default createStore(rootReducer, applyMiddleware(logger, thunk));
+  if (Settings.stage === 'development') {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const logger = require('redux-logger').createLogger();
+    middleware = [...middleware, logger];
+  }
+
+  return middleware;
+};
+
+export default createStore(rootReducer, applyMiddleware(...constructMiddleware()));
 
 export type StoreState = ReturnType<typeof rootReducer>;
