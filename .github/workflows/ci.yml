@@ -23,7 +23,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'release')
     steps:
       - run: zip -vr build.zip build/ -x "*.DS_Store"
-      - uses: rkrishn7/chrome-extension-upload-action@1.41
+      - uses: rkrishn7/chrome-extension-upload-action@dde070fc5bf89ee88430ac967cbf10f9cdebac0b
         with:
           refresh-token: ${{ secrets.CHROME_WS_REFRESH_TOKEN }}
           client-id: ${{ secrets.CHROME_WS_CLIENT_ID }}
