@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Card, Flex } from 'rebass';
 import styled from '@root/style/styled';
 import { Input } from '@rebass/forms';
@@ -75,18 +75,18 @@ type ReduxProps = ConnectedProps<typeof connector>;
 
 const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificationsEnabled, toggleNotifications }) => {
   const [message, setMessage] = useState<string | null>(null);
-  const inputRef = document.getElementById('chatInput');
+  const inputRef = useRef(null);
 
   const handleSendMessage = () => {
     if (message) {
       sendMessage(message);
-      inputRef.value = "";
-      setMessage("");
+      if (inputRef.current) inputRef.current.value = '';
+      setMessage('');
     }
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if(event.key === 'Enter'){
+    if (event.key === 'Enter') {
       event.preventDefault();
       handleSendMessage();
     }
@@ -100,7 +100,12 @@ const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificati
     <Container>
       <Flex flexDirection="column">
         <Flex flexDirection="row">
-          <ChatInput placeholder="send a message..." id={"chatInput"} onChange={handleInputChange} onKeyPress={handleKeyPress} />
+          <ChatInput
+            placeholder="send a message..."
+            ref={inputRef}
+            onChange={handleInputChange}
+            onKeyPress={handleKeyPress}
+          />
           {/* Send Message */}
           <ToolbarButton>
             <FontAwesomeIcon icon={faPaperPlane} size="lg" onClick={handleSendMessage} />

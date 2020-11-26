@@ -24,16 +24,11 @@ type ReduxProps = ConnectedProps<typeof connector>;
 
 const MessageList: React.FC<ReduxProps> = ({ messages }) => {
   const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+  };
 
-  if(messagesEndRef){
-    const scrollToBottom = () => {
-      messagesEndRef.current.scrollIntoView({behavior: "auto"});
-    }
-
-    if(true){
-      useEffect(scrollToBottom, [messages]);
-    }
-  }
+  useEffect(scrollToBottom, [messages]);
 
   return (
     <Container>
