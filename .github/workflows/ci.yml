@@ -16,12 +16,20 @@ jobs:
         env:
           CI: true
       - run: yarn build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-folder
+          path: build/
   publish:
     name: Publish to Chrome Web Store
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'release')
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-folder
+          path: build/
       - run: zip -vr build.zip build/ -x "*.DS_Store"
       - uses: rkrishn7/chrome-extension-upload-action@dde070fc5bf89ee88430ac967cbf10f9cdebac0b
         with:
