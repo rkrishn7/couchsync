@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Flex } from 'rebass';
 import styled from '@root/style/styled';
 
@@ -23,10 +23,28 @@ const connector = connect(mapState);
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const MessageList: React.FC<ReduxProps> = ({ messages }) => {
+  const messageRefs = useRef({} as Record<number, HTMLDivElement | null>);
+
+  useEffect(() => {
+    const lastMessageId = messages[messages.length - 1]?.id;
+    if (lastMessageId) {
+      messageRefs.current[lastMessageId]?.scrollIntoView(false);
+    }
+  }, [messages]);
+
   return (
     <Container>
-      {messages?.map(({ content, isOwnMessage, user }) => (
-        <MessageCell message={content} isOwnMessage={isOwnMessage} userName={user.name} avatarUrl={user.avatarUrl} />
+      {messages?.map(({ content, isOwnMessage, user, id }) => (
+        <MessageCell
+          message={content}
+          isOwnMessage={isOwnMessage}
+          userName={user.name}
+          avatarUrl={user.avatarUrl}
+          key={id}
+          ref={ref => {
+            messageRefs.current[id] = ref;
+          }}
+        />
       ))}
     </Container>
   );

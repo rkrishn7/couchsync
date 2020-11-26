@@ -26,7 +26,7 @@ const Cell = styled(Box)<CellProps>`
   border-bottom-left-radius: ${p => p.theme.radii[2]}px;
   background-color: ${p => (p.isOwnMessage ? p.theme.colors.secondary : p.theme.colors.primary)};
   padding: 5px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: white;
   word-wrap: break-word;
@@ -52,22 +52,24 @@ const mapState = (state: StoreState) => {
   };
 };
 
-const connector = connect(mapState);
+const connector = connect(mapState, null, null, { forwardRef: true });
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const MessageCell: React.FC<ReduxProps & MessageCellProps> = ({ isOwnMessage, message, avatarUrl, userName }) => {
-  return (
-    <MessageRow isOwnMessage={isOwnMessage}>
-      <Flex flexDirection="column" width="50%">
-        <Text fontSize="9px" color="greyDark" textAlign={isOwnMessage ? 'right' : 'left'}>
-          {userName}
-        </Text>
-        <Cell isOwnMessage={isOwnMessage}>{message}</Cell>
-      </Flex>
-      <Avatar src={avatarUrl} />
-    </MessageRow>
-  );
-};
+const MessageCell = React.forwardRef<HTMLDivElement, ReduxProps & MessageCellProps>(
+  ({ isOwnMessage, message, avatarUrl, userName }, ref) => {
+    return (
+      <MessageRow isOwnMessage={isOwnMessage} ref={ref}>
+        <Flex flexDirection="column" width="50%">
+          <Text fontSize="9px" color="greyDark" textAlign={isOwnMessage ? 'right' : 'left'}>
+            {userName}
+          </Text>
+          <Cell isOwnMessage={isOwnMessage}>{message}</Cell>
+        </Flex>
+        <Avatar src={avatarUrl} />
+      </MessageRow>
+    );
+  }
+);
 
 export default connector(MessageCell);
