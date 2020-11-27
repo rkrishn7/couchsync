@@ -4,7 +4,7 @@ type Stage = 'production' | 'development' | 'test';
 
 const SettingsDefault = {
   brandName: 'couchsync',
-  apiUrl: 'http://localhost:8000',
+  apiUrl: 'https://e20aa53b7345.ngrok.io',
   stage: process.env.NODE_ENV as Stage,
 };
 

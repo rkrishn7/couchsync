@@ -13,8 +13,8 @@ code {
 }
 
 #couch-sync-extension__root {
-  right: 5%;
-  bottom: 5%;
+  right: 2.5%;
+  bottom: 7.5%;
   position: fixed;
   z-index: 2147483647;
 }
