@@ -5,6 +5,8 @@ import { Notification } from '@root/lib/types/notification';
 import { PartyState } from '@contentScript/reducers/party';
 import socket from '@contentScript/socket';
 
+import { disableAutoplay } from '@root/lib/utils';
+
 import { Dispatch } from 'redux';
 
 import { setUser } from './user';
@@ -52,6 +54,7 @@ export const joinParty = ({ hash, isHost }: any) => {
         dispatch(setParty({ isHost, ...party }));
         dispatch(setUser({ ...user }));
       });
+      disableAutoplay();
     } catch (error) {
       debug(error.message);
     }
