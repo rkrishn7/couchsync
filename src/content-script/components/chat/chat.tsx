@@ -96,7 +96,7 @@ const Chat: React.FC<ReduxProps> = ({ chatEnabled, partyId, toggleChat, partyUse
             </Flex>
             <Brand headingProps={{ fontWeight: 600 }} />
           </HeaderContainer>
-          <Flex flex={3} overflowY="scroll" padding={2}>
+          <Flex flex={3} overflowY="hidden" padding={2}>
             <MessageList />
           </Flex>
           <MessageBar />
