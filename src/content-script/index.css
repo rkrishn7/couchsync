@@ -29,6 +29,7 @@ code {
 
 .react-toast-notifications__container {
   z-index: 2147483647 !important;
+  overflow: hidden !important;
 }
 
 /* FONT CSS */
