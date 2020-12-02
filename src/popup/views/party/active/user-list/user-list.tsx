@@ -55,7 +55,7 @@ const UserList: React.FC<ReduxProps> = ({ users, currentUser, setParty }) => {
   }, [setParty]);
 
   return (
-    <Flex flexDirection="column">
+    <Flex flexDirection="column" height="300px">
       <Text fontSize={1} color="greyDark" ml={1} mb={2} fontWeight={700}>
         party members
       </Text>
