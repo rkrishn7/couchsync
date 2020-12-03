@@ -18,10 +18,10 @@ type CellProps = Pick<MessageCellProps, 'isOwnMessage'>;
 
 const Cell = styled(Box)<CellProps>`
   min-height: 30px;
-  border-top-left-radius: ${p => (p.isOwnMessage ? p.theme.radii[3] : p.theme.radii[1])}px;
+  border-top-left-radius: ${p => p.theme.radii[3]}px;
   border-top-right-radius: ${p => p.theme.radii[3]}px;
   border-bottom-right-radius: ${p => (p.isOwnMessage ? p.theme.radii[1] : p.theme.radii[3])}px;
-  border-bottom-left-radius: ${p => p.theme.radii[3]}px;
+  border-bottom-left-radius: ${p => (p.isOwnMessage ? p.theme.radii[3] : p.theme.radii[1])}px;
   background-color: ${p => (p.isOwnMessage ? p.theme.colors.primary : p.theme.colors.greyMid)};
   padding: 5px;
   padding-left: ${p => p.theme.space[2]}px;
