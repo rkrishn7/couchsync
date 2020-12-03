@@ -20,7 +20,12 @@ const MessageNotification: React.FC<NotificationProps> = ({ content, title, avat
           {title}
         </Text>
       </Flex>
-      <Text ml={avatar ? 2 : 0} fontSize="12px">
+      <Text
+        ml={avatar ? 2 : 0}
+        mr={avatar ? 2 : 0}
+        width="280px"
+        fontSize="12px"
+        style={{ overflowWrap: 'break-word' }}>
         {content}
       </Text>
     </Flex>
