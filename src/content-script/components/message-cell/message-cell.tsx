@@ -24,8 +24,8 @@ const Cell = styled(Box)<CellProps>`
   border-bottom-left-radius: ${p => p.theme.radii[3]}px;
   background-color: ${p => (p.isOwnMessage ? p.theme.colors.primary : p.theme.colors.greyMid)};
   padding: 5px;
-  padding-left: ${p => (p.isOwnMessage ? 0 : p.theme.space[2])}px;
-  padding-right: ${p => (p.isOwnMessage ? p.theme.space[2] : 0)}px;
+  padding-left: ${p => p.theme.space[2]}px;
+  padding-right: ${p => p.theme.space[2]}px;
   font-size: 14px;
   font-weight: 500;
   color: ${p => (p.isOwnMessage ? 'white' : p.theme.colors.greyDarkest)};
