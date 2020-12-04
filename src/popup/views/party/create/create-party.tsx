@@ -5,6 +5,7 @@ import styled from '@root/style/styled';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { createParty } from '@popup/actions/party';
+import { StoreState } from '@popup/store';
 
 const Container = styled(Flex)`
   flex-direction: column;
@@ -13,18 +14,24 @@ const Container = styled(Flex)`
   height: 70px;
 `;
 
+const mapState = (state: StoreState) => {
+  return {
+    joiningParty: state.party.isJoiningParty,
+  };
+};
+
 const mapDispatch = {
   createParty,
 };
 
-const connector = connect(null, mapDispatch);
+const connector = connect(mapState, mapDispatch);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const Party: React.FC<ReduxProps> = ({ createParty }) => {
+const Party: React.FC<ReduxProps> = ({ createParty, joiningParty }) => {
   return (
     <Container>
-      <Button onClick={createParty}>
+      <Button onClick={createParty} loading={joiningParty} disabled={joiningParty}>
         <Text fontSize={2} fontWeight={400}>
           create a party
         </Text>

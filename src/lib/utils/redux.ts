@@ -26,14 +26,20 @@ export const createAsyncAction = <T = string>({ work, key, reducer }: AsyncActio
       value: true,
     });
 
-    const result = await dispatch(work);
-
-    dispatch({
+    const finishAction = {
       type: `${reducer}-SET_ASYNC_TOGGLED_STATE`,
       key,
       value: false,
-    });
+    };
 
-    return result;
+    try {
+      const result = await dispatch(work);
+      dispatch(finishAction);
+      return result;
+    } catch {
+      dispatch(finishAction);
+    }
+
+    return undefined;
   };
 };

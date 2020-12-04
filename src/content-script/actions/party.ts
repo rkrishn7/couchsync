@@ -1,5 +1,4 @@
 import { PartyActions, SocketEvents } from '@root/lib/constants';
-import { debug } from '@root/lib/utils/debug';
 import { Notification } from '@root/lib/types/notification';
 
 import { PartyState } from '@contentScript/reducers/party';
@@ -46,14 +45,19 @@ export const updateUser = (user: any) => {
 
 export const joinParty = ({ hash, isHost }: any) => {
   return (dispatch: Dispatch) => {
-    try {
+    return new Promise((resolve, reject) => {
+      const MAX_EVENT_TIMEOUT_MS = 3000;
+      setTimeout(() => {
+        reject(new Error('Request timed out. Please try again.'));
+      }, MAX_EVENT_TIMEOUT_MS);
+
       socket.connect();
       socket.emit(SocketEvents.JOIN_PARTY, { partyHash: hash }, ({ party, user }: any) => {
         dispatch(setParty({ isHost, ...party }));
         dispatch(setUser({ ...user }));
+
+        resolve({ party, user });
       });
-    } catch (error) {
-      debug(error.message);
-    }
+    });
   };
 };

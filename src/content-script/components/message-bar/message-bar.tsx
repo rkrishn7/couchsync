@@ -159,7 +159,7 @@ const MessageBar: React.FC<ReduxProps> = ({
               arrowColor="white"
               clickable
               border
-              borderColor={theme.colors.secondary}
+              borderColor={theme.colors.grey}
               className="couchsync-tooltip__container">
               {EMOJIS.map((val, i) => (
                 // eslint-disable-next-line react/no-array-index-key
