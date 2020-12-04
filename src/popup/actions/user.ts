@@ -13,6 +13,29 @@ interface UpdateProfileDetails {
   avatarUrl: string;
 }
 
+export const setAutoJoin = (autoJoinSet: boolean) => {
+  chrome.storage.sync.set(
+    {
+      autoJoin: autoJoinSet,
+    },
+    () => {
+      console.log(`set value to: ${autoJoinSet}`);
+    }
+  );
+};
+
+export const getAutoJoin = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.storage.sync.get('autoJoin', function (data) {
+        resolve(data.autoJoin as boolean);
+      });
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+};
+
 export const setUser = (user: UserState) => {
   return {
     type: UserActions.SET_USER,

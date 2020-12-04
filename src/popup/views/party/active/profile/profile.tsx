@@ -5,10 +5,12 @@ import { connect, ConnectedProps } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 
+import { Label } from '@rebass/forms';
 import { Button } from '@popup/components/button';
 import { Input } from '@popup/components/input';
+import { Checkbox } from '@popup/components/checkbox';
 import { IconButton } from '@popup/components/icon-button';
-import { setUser, updateProfile } from '@popup/actions/user';
+import { setAutoJoin, getAutoJoin, setUser, updateProfile } from '@popup/actions/user';
 import { StoreState } from '@popup/store';
 
 import { Avatar } from '@root/components/avatar';
@@ -24,6 +26,7 @@ const mapState = (state: StoreState) => {
 };
 
 const mapDispatch = {
+  setAutoJoin,
   setUser,
   updateProfile,
 };
@@ -32,9 +35,10 @@ const connector = connect(mapState, mapDispatch);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setUser, updateProfile }) => {
+const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setAutoJoin, setUser, updateProfile }) => {
   const [name, setName] = useState(userName);
   const [avatar, setAvatar] = useState(avatarUrl);
+  const [autoJoin, setAutoJoinState] = useState(false);
 
   const profileUpdated = name !== userName || avatar !== avatarUrl;
 
@@ -50,6 +54,7 @@ const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setUser, updatePro
   useEffect(() => {
     setName(userName);
     setAvatar(avatarUrl);
+    getAutoJoin().then(setAutoJoinState);
   }, [userName, avatarUrl]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +69,10 @@ const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setUser, updatePro
       avatarUrl: avatar!,
       name: name!,
     });
+  };
+
+  const handleSetAutoJoin = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAutoJoin(e.target.checked);
   };
 
   const handleAvatarChange = () => {
@@ -91,6 +100,10 @@ const Profile: React.FC<ReduxProps> = ({ userName, avatarUrl, setUser, updatePro
           update profile
         </Text>
       </Button>
+      <Label fontSize={2} color="secondary" fontWeight={400} padding={1} marginTop={1}>
+        <Checkbox onChange={handleSetAutoJoin} defaultChecked={autoJoin} />
+        Set Party Auto Join
+      </Label>
     </Flex>
   );
 };

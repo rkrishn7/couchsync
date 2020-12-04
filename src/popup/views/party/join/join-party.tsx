@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Flex, Text } from 'rebass';
 import styled from '@root/style/styled';
 import { Button } from '@popup/components/button';
 
 import { connect, ConnectedProps } from 'react-redux';
+import { getAutoJoin } from '@popup/actions/user';
 import { joinParty } from '@popup/actions/party';
 
 import { parseUrl } from 'query-string';
@@ -35,6 +36,14 @@ const JoinParty: React.FC<ReduxProps> = ({ joinParty }) => {
       }
     });
   };
+
+  useEffect(() => {
+    const isAutoJoin = getAutoJoin().then();
+    if (isAutoJoin) {
+      handleJoinParty();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container>
