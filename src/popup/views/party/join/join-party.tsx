@@ -5,6 +5,7 @@ import { Button } from '@popup/components/button';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { joinParty } from '@popup/actions/party';
+import { StoreState } from '@popup/store';
 
 import { parseUrl } from 'query-string';
 
@@ -16,15 +17,21 @@ const Container = styled(Flex)`
   padding: ${p => p.theme.space[2]}px;
 `;
 
+const mapState = (state: StoreState) => {
+  return {
+    joiningParty: state.party.isJoiningParty,
+  };
+};
+
 const mapDispatch = {
   joinParty,
 };
 
-const connector = connect(null, mapDispatch);
+const connector = connect(mapState, mapDispatch);
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const JoinParty: React.FC<ReduxProps> = ({ joinParty }) => {
+const JoinParty: React.FC<ReduxProps> = ({ joinParty, joiningParty }) => {
   const handleJoinParty = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       if (tabs[0]) {
@@ -38,7 +45,7 @@ const JoinParty: React.FC<ReduxProps> = ({ joinParty }) => {
 
   return (
     <Container>
-      <Button onClick={handleJoinParty}>
+      <Button onClick={handleJoinParty} loading={joiningParty} disabled={joiningParty}>
         <Text fontSize={2} fontWeight={400}>
           join party
         </Text>
