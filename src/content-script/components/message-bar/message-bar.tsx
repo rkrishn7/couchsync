@@ -83,6 +83,7 @@ const mapState = (state: StoreState) => {
   return {
     chatEnabled: state.chat.enabled,
     notificationsEnabled: state.chat.notificationsEnabled,
+    isSendingMessage: state.chat.isSendingMessage,
   };
 };
 
@@ -97,7 +98,13 @@ type ReduxProps = ConnectedProps<typeof connector>;
 
 const EMOJIS = ['😁', '😂', '😫', '😡', '🙂'];
 
-const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificationsEnabled, toggleNotifications }) => {
+const MessageBar: React.FC<ReduxProps> = ({
+  chatEnabled,
+  sendMessage,
+  notificationsEnabled,
+  toggleNotifications,
+  isSendingMessage,
+}) => {
   const [message, setMessage] = useState<string>('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,7 +137,7 @@ const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificati
             value={message}
             onKeyPress={handleSubmit}
           />
-          <ToolbarButton onClick={handleSendMessage}>
+          <ToolbarButton onClick={handleSendMessage} disabled={isSendingMessage}>
             <FontAwesomeIcon icon={faPaperPlane} size="lg" />
           </ToolbarButton>
         </Flex>
@@ -152,7 +159,7 @@ const MessageBar: React.FC<ReduxProps> = ({ chatEnabled, sendMessage, notificati
               arrowColor="white"
               clickable
               border
-              borderColor={theme.colors.secondary}
+              borderColor={theme.colors.grey}
               className="couchsync-tooltip__container">
               {EMOJIS.map((val, i) => (
                 // eslint-disable-next-line react/no-array-index-key

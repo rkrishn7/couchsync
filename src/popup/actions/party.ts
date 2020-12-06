@@ -1,8 +1,10 @@
 import { PartyActions, ChromeRuntimeMessages, PopupViews } from '@root/lib/constants';
 import http from '@root/lib/http';
 import { debug } from '@root/lib/utils';
+import { createAsyncAction } from '@root/lib/utils/redux';
 import { setPopupView } from '@popup/actions/popup';
-import { PartyState } from '@popup/reducers/party';
+import { setUser } from '@popup/actions/user';
+import { PartyState, PartyAsyncToggledState } from '@popup/reducers/party';
 import { Dispatch } from 'redux';
 
 export const updateUser = (user: any) => {
@@ -19,54 +21,107 @@ export const setParty = (details: PartyState) => {
   };
 };
 
-export const createParty = () => {
-  return (dispatch: Dispatch) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
-      if (tabs[0]) {
-        try {
-          const { data } = await http.post('/party/create', {
-            watchUrl: tabs[0].url,
-          });
+export const createParty = () =>
+  createAsyncAction<PartyAsyncToggledState>({
+    work: (dispatch: Dispatch) => {
+      return new Promise((resolve, reject) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
+          if (tabs[0]) {
+            try {
+              const { data } = await http.post('/party/create', {
+                watchUrl: tabs[0].url,
+              });
 
-          const partyDetails = { isHost: true, ...data };
+              chrome.tabs.sendMessage(
+                tabs[0].id!,
+                {
+                  name: ChromeRuntimeMessages.JOIN_PARTY,
+                  data: {
+                    isHost: true,
+                    hash: data.hash,
+                  },
+                },
+                ({ data: { error, party, user } }) => {
+                  if (error) {
+                    chrome.tabs.sendMessage(tabs[0].id!, {
+                      name: ChromeRuntimeMessages.ADD_NOTIFICATION,
+                      data: {
+                        notification: {
+                          title: 'Error',
+                          content: error,
+                          type: 'error',
+                        },
+                      },
+                    });
+                    reject();
+                    return;
+                  }
 
-          dispatch(setParty(partyDetails));
-          dispatch(setPopupView(PopupViews.IN_PARTY));
+                  dispatch(setParty(party));
+                  dispatch(setUser(user));
+                  dispatch(setPopupView(PopupViews.IN_PARTY));
+                  resolve();
+                }
+              );
+            } catch (error) {
+              reject();
+              debug(error.message);
+            }
+          }
+        });
+      });
+    },
+    key: 'isJoiningParty',
+    reducer: 'party',
+  });
 
-          // Send a runtime message to be picked up by content-script
-          chrome.tabs.sendMessage(tabs[0].id!, {
-            name: ChromeRuntimeMessages.JOIN_PARTY,
-            data: partyDetails,
-          });
-        } catch (error) {
-          debug(error.message);
-        }
-      }
-    });
-  };
-};
+export const joinParty = ({ hash }: any) =>
+  createAsyncAction<PartyAsyncToggledState>({
+    work: (dispatch: Dispatch) => {
+      return new Promise((resolve, reject) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
+          if (tabs[0]) {
+            try {
+              const { data } = await http.get(`/party?partyHash=${hash}`);
 
-export const joinParty = ({ hash }: any) => {
-  return (dispatch: Dispatch) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, async tabs => {
-      if (tabs[0]) {
-        try {
-          const { data: party } = await http.get(`/party?partyHash=${hash}`);
+              chrome.tabs.sendMessage(
+                tabs[0].id!,
+                {
+                  name: ChromeRuntimeMessages.JOIN_PARTY,
+                  data: {
+                    hash: data.hash,
+                  },
+                },
+                ({ data: { error, party, user } }) => {
+                  if (error) {
+                    chrome.tabs.sendMessage(tabs[0].id!, {
+                      name: ChromeRuntimeMessages.ADD_NOTIFICATION,
+                      data: {
+                        notification: {
+                          title: 'Error',
+                          content: error,
+                          type: 'error',
+                        },
+                      },
+                    });
+                    reject();
+                    return;
+                  }
 
-          const partyDetails = { isHost: false, ...party };
-
-          dispatch(setParty(partyDetails));
-          dispatch(setPopupView(PopupViews.IN_PARTY));
-
-          // Send a runtime message to be picked up by content-script
-          chrome.tabs.sendMessage(tabs[0].id!, {
-            name: ChromeRuntimeMessages.JOIN_PARTY,
-            data: partyDetails,
-          });
-        } catch (error) {
-          debug(error.message);
-        }
-      }
-    });
-  };
-};
+                  dispatch(setParty(party));
+                  dispatch(setUser(user));
+                  dispatch(setPopupView(PopupViews.IN_PARTY));
+                  resolve();
+                }
+              );
+            } catch (error) {
+              reject();
+              debug(error.message);
+            }
+          }
+        });
+      });
+    },
+    key: 'isJoiningParty',
+    reducer: 'party',
+  });

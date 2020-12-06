@@ -1,12 +1,15 @@
 import { PartyActions } from '@root/lib/constants/party';
+import { createAsyncReducer } from '@root/lib/utils/redux';
 
-export interface PartyState {
+export type PartyAsyncToggledState = 'isJoiningParty';
+
+export type PartyState = {
   id: string | null;
   isHost: boolean;
   hash: string | null;
   joinUrl: string | null;
   users: any[];
-}
+} & Record<PartyAsyncToggledState, boolean>;
 
 type Action = { type: PartyActions } & Record<string, any>;
 
@@ -16,6 +19,7 @@ const initialState: PartyState = {
   hash: null,
   isHost: false,
   users: [],
+  isJoiningParty: false,
 };
 
 const party = (state: PartyState = initialState, action: Action) => {
@@ -39,4 +43,4 @@ const party = (state: PartyState = initialState, action: Action) => {
   }
 };
 
-export default party;
+export default createAsyncReducer(party, 'party');
