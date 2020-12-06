@@ -7,6 +7,21 @@ import socket from '@contentScript/socket';
 
 import { stringifyUrl, parseUrl } from 'query-string';
 
+export function navigateToUrl(url: string) {
+  const { query } = parseUrl(url);
+  const navigationInjection = `function(){
+    nav.navigate({
+      commandMetadata: {
+        webCommandMetadata: {
+          url: '/watch?v=${query.v}&couchSyncRoomId=${query.couchSyncRoomId}',
+        },
+      },
+    }, false, undefined, {}, undefined);
+  }`;
+
+  inject(navigationInjection);
+}
+
 /**
  * Handles page transitions
  */
@@ -48,17 +63,22 @@ export function onPageNavigate() {
   }
 }
 
-export function navigateToUrl(url: string) {
-  const { query } = parseUrl(url);
-  const navigationInjection = `function(){
-    nav.navigate({
-      commandMetadata: {
-        webCommandMetadata: {
-          url: '/watch?v=${query.v}&couchSyncRoomId=${query.couchSyncRoomId}',
-        },
-      },
-    }, false, undefined, {}, undefined);
-  }`;
+export function syncVideoWithParty() {
+  const {
+    party: { joinUrl },
+  } = store.getState();
 
-  inject(navigationInjection);
+  if (!joinUrl) return;
+
+  const {
+    query: { v: currentVidId },
+  } = parseUrl(document.location.href);
+
+  const {
+    query: { v: storedVidId },
+  } = parseUrl(joinUrl);
+
+  if (currentVidId !== storedVidId) {
+    navigateToUrl(joinUrl);
+  }
 }
