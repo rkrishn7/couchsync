@@ -89,7 +89,6 @@ export const joinParty = ({ hash }: any) =>
                 {
                   name: ChromeRuntimeMessages.JOIN_PARTY,
                   data: {
-                    isHost: true,
                     hash: data.hash,
                   },
                 },
