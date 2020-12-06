@@ -67,9 +67,12 @@ chrome.runtime.onMessage.addListener((message: any, _sender, sendResponse) => {
       break;
     }
     case ChromeRuntimeMessages.JOIN_PARTY: {
-      ((store.dispatch(joinParty(message.data!)) as unknown) as Promise<any>)
-        .then(res => sendResponse({ data: { ...res } }))
-        .catch(err => sendResponse({ data: { error: err.message } }));
+      store
+        .dispatch(joinParty(message.data!))
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        .then((res: any) => sendResponse({ data: { ...res } }))
+        .catch((err: any) => sendResponse({ data: { error: err.message } }));
       break;
     }
     case ChromeRuntimeMessages.ADD_NOTIFICATION: {
