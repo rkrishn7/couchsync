@@ -1,10 +1,15 @@
 import { ChatActions } from '@root/lib/constants/chat';
+import { createAsyncReducer } from '@root/lib/utils/redux';
 
-export interface ChatState {
+import { Reducer } from 'redux';
+
+export type ChatAsyncToggledState = 'isSendingMessage';
+
+export type ChatState = {
   messages: any[];
   enabled: boolean;
   notificationsEnabled: boolean;
-}
+} & Record<ChatAsyncToggledState, boolean>;
 
 type Action = { type: ChatActions } & Record<string, any>;
 
@@ -12,9 +17,10 @@ const initialState: ChatState = {
   messages: [],
   enabled: false,
   notificationsEnabled: true,
+  isSendingMessage: false,
 };
 
-const messages = (state: ChatState = initialState, action: Action): ChatState => {
+const chat: Reducer<ChatState, Action> = (state = initialState, action) => {
   switch (action.type) {
     case ChatActions.NEW_MESSAGE:
       return {
@@ -48,4 +54,4 @@ const messages = (state: ChatState = initialState, action: Action): ChatState =>
   }
 };
 
-export default messages;
+export default createAsyncReducer(chat, 'chat');

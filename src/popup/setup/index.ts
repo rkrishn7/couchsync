@@ -34,6 +34,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
               hash,
               isHost,
               users,
+              isJoiningParty: false,
             })
           );
           store.dispatch(setPopupView(PopupViews.IN_PARTY));
