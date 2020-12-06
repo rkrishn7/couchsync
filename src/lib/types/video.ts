@@ -4,7 +4,6 @@ export interface VideoEvent {
 }
 
 export interface VideoEventData {
-  isHost: boolean;
   paused: boolean;
   currentTime: number;
   playbackRate: number;

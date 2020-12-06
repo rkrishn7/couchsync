@@ -17,24 +17,30 @@ export function onPageNavigate() {
 
   if (!partyId) return;
 
-  const newJoinUrl = stringifyUrl({
-    url: document.location.href,
-    query: {
-      couchSyncRoomId: partyHash,
-    },
-  });
+  const {
+    query: { v: newVidId },
+  } = parseUrl(document.location.href);
 
-  const { query } = parseUrl(document.location.href);
+  const {
+    query: { v: storedVidId },
+  } = parseUrl(joinUrl!);
 
   // The host is navigating to another video: notify party members
-  if (isHost && query.v) {
+  if (!!newVidId && isHost) {
+    const newJoinUrl = stringifyUrl({
+      url: document.location.href,
+      query: {
+        couchSyncRoomId: partyHash,
+      },
+    });
+
     store.dispatch(setJoinUrl(newJoinUrl));
     socket.emit(SocketEvents.URL_CHANGE, {
       partyHash,
       newUrl: newJoinUrl,
     });
     // A user is manually navigating or host is navigating but not to another video: teardown
-  } else if (newJoinUrl !== joinUrl) {
+  } else if (newVidId !== storedVidId) {
     socket.disconnect();
     store.dispatch({
       type: ContentScriptActions.TEARDOWN_STATE,

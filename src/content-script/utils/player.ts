@@ -2,7 +2,6 @@ import socket from '@contentScript/socket';
 import store from '@contentScript/store';
 
 import { parseUrl } from 'query-string';
-import { navigateToUrl } from '@contentScript/utils/transitions';
 import { SocketEvents } from '@root/lib/constants/socket';
 import { VideoEvent, VideoEventData } from '@root/lib/types/video';
 import { MAX_DESYNC_SEC } from '@root/lib/constants/video';
@@ -45,35 +44,34 @@ function findVideoPlayer(): HTMLVideoElement | null {
   return player;
 }
 
-function getPlayerInfo(player: HTMLVideoElement): VideoEvent {
+function getPlayerInfo(player: HTMLVideoElement): VideoEventData {
   // collect player info
   const { paused, currentTime, duration, playbackRate } = player;
 
   // collect url
   const videoId = parseUrl(document.location.href).query.v as string;
 
-  const { isHost, hash } = store.getState().party;
-
-  const eventData = {
+  return {
     paused,
     currentTime,
     duration,
     playbackRate,
     videoId,
-    isHost,
   };
-
-  return { partyHash: hash as string, eventData };
 }
 
 function addVideoListeners(player: HTMLVideoElement) {
-  // TODO: Once implemented, include communism/facism check
   function sendVideoEvent() {
-    // construct payload
-    const payload = getPlayerInfo(player);
+    const { isHost, hash } = store.getState().party;
 
-    // if party not created, don't send anything
-    if (!payload.partyHash || !payload.eventData.isHost) return;
+    if (!isHost || !hash) return;
+
+    const eventData = getPlayerInfo(player);
+
+    const payload: VideoEvent = {
+      partyHash: hash,
+      eventData,
+    };
 
     if (socket.connected) socket.emit(SocketEvents.VIDEO_EVENT, payload);
   }
@@ -87,12 +85,6 @@ function addVideoListeners(player: HTMLVideoElement) {
 
 function addVideoSocketListeners(player: HTMLVideoElement) {
   socket.on(SocketEvents.VIDEO_EVENT, (hostPlayer: VideoEventData) => {
-    // ignore non-host payloads
-    if (!hostPlayer.isHost) return;
-
-    // get current user's player data
-    const clientPlayer = getPlayerInfo(player).eventData;
-
     // match player play/pause state
     if (hostPlayer.paused) player.pause();
     else player.play();
@@ -103,12 +95,6 @@ function addVideoSocketListeners(player: HTMLVideoElement) {
     // resync if needed and not host. handles seek events
     if (Math.abs(player.currentTime - hostPlayer.currentTime) > MAX_DESYNC_SEC) {
       player.currentTime = hostPlayer.currentTime;
-    }
-
-    // match player videos
-    if (clientPlayer.videoId !== hostPlayer.videoId) {
-      const roomId = parseUrl(document.location.href).query.couchSyncRoomId;
-      navigateToUrl(`youtube.com/watch?v=${hostPlayer.videoId}&couchSyncRoomId=${roomId}`);
     }
   });
 }
