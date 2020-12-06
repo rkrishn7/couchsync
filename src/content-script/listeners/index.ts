@@ -25,8 +25,6 @@ window.addEventListener('message', event => {
   }
 });
 
-window.addEventListener('load', attachToVideoPlayer);
-
 // CANNOT REFERENCE ANY VARIABLES FROM OUTER SCOPE (They will not resolve)
 function addNavigationListeners() {
   /**
