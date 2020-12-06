@@ -11,8 +11,9 @@ import { updateUserMessages } from '@contentScript/actions/chat';
 
 import { Dispatch } from 'redux';
 
-const socket = io(settings.apiUrl, {
+const socket = io(settings.baseUrl, {
   autoConnect: false,
+  path: '/api/socket.io',
 });
 
 socket.on(SocketEvents.CONNECT, () => debug('socket connected'));
@@ -66,5 +67,33 @@ socket.on(SocketEvents.URL_CHANGE, ({ data: { newUrl } }: any) => {
   store.dispatch(setJoinUrl(newUrl));
   navigateToUrl(newUrl);
 });
+
+socket.on(SocketEvents.ERROR, debug);
+
+type EmitEventParams = {
+  eventName: SocketEvents;
+  data: any;
+  timeout?: number;
+};
+
+/**
+ * Emits an event and throws an error if a response wasn't received
+ * before `timeout` ms. This is only to be used for emitting
+ * events that require an acknowledgement.
+ * @param EmitEventParams
+ */
+export const emitEvent = ({ eventName, data, timeout }: EmitEventParams): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    if (timeout) {
+      setTimeout(() => {
+        reject(new Error('Request timed out. Please try again.'));
+      }, timeout);
+    }
+
+    socket.emit(eventName, data, (result: any) => {
+      resolve(result);
+    });
+  });
+};
 
 export default socket;

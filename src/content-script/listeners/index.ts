@@ -67,7 +67,12 @@ chrome.runtime.onMessage.addListener((message: any, _sender, sendResponse) => {
       break;
     }
     case ChromeRuntimeMessages.JOIN_PARTY: {
-      store.dispatch(joinParty(message.data!));
+      store
+        .dispatch(joinParty(message.data!))
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        .then((res: any) => sendResponse({ data: { ...res } }))
+        .catch((err: any) => sendResponse({ data: { error: err.message } }));
       break;
     }
     case ChromeRuntimeMessages.ADD_NOTIFICATION: {
@@ -76,4 +81,11 @@ chrome.runtime.onMessage.addListener((message: any, _sender, sendResponse) => {
     }
     default:
   }
+
+  /**
+   * Returning `true` will keep the message channel open
+   * until `sendResponse` is called.
+   * @see https://developer.chrome.com/extensions/runtime#event-onMessage
+   */
+  return true;
 });
