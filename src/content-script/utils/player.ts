@@ -50,15 +50,9 @@ function getPlayerInfo(player: HTMLVideoElement): VideoEvent {
   const { paused, currentTime, duration, playbackRate } = player;
 
   // collect url
-  let videoId = parseUrl(document.location.href).query.v;
-  if (!videoId) videoId = 'null';
-  if (Array.isArray(videoId)) [videoId] = videoId;
+  const videoId = parseUrl(document.location.href).query.v as string;
 
-  // collect host and hash
-  // const state = store.getState();
-  let { isHost, hash } = store.getState().party;
-  if (!hash) hash = '';
-  if (!isHost) isHost = false;
+  const { isHost, hash } = store.getState().party;
 
   const eventData = {
     paused,
@@ -69,31 +63,26 @@ function getPlayerInfo(player: HTMLVideoElement): VideoEvent {
     isHost,
   };
 
-  return { partyHash: hash, eventData };
+  return { partyHash: hash as string, eventData };
 }
 
 function addVideoListeners(player: HTMLVideoElement) {
   // TODO: Once implemented, include communism/facism check
   function sendVideoEvent() {
     // construct payload
-    const payload: VideoEvent = getPlayerInfo(player);
+    const payload = getPlayerInfo(player);
 
     // if party not created, don't send anything
-    if (!payload.partyHash) return;
+    if (!payload.partyHash || !payload.eventData.isHost) return;
 
-    // send payload if host
-    if (payload.eventData.isHost) {
-      socket.emit(SocketEvents.VIDEO_EVENT, payload);
-    }
+    if (socket.connected) socket.emit(SocketEvents.VIDEO_EVENT, payload);
   }
 
   player.onplay = sendVideoEvent;
   player.onpause = sendVideoEvent;
   player.onseeked = sendVideoEvent;
 
-  setInterval(function sendProgressOnPause() {
-    sendVideoEvent();
-  }, 1000);
+  setInterval(sendVideoEvent, 2000);
 }
 
 function addVideoSocketListeners(player: HTMLVideoElement) {
