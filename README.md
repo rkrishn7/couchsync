@@ -1,4 +1,4 @@
-# Playback Sync
+# couchsync
 
 A browser extension that enables you to sync videos from your favorite streaming platforms, across multiple devices.
 
