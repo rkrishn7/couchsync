@@ -16,10 +16,3 @@ export enum SocketEvents {
 export interface CreatePartyResponse {
   roomId: string;
 }
-
-export enum VideoSocketEvents {
-  VIDEO_PLAY = 'video_play',
-  VIDEO_PAUSE = 'video_pause',
-  VIDEO_SEEKED = 'video_seeked',
-  VIDEO_PROGRESS = 'video_progress',
-}

@@ -3,6 +3,7 @@ import { Notification } from '@root/lib/types/notification';
 
 import { PartyState } from '@contentScript/reducers/party';
 import socket, { emitEvent } from '@contentScript/socket';
+import { syncVideoWithParty } from '@contentScript/utils/transitions';
 
 import { Dispatch } from 'redux';
 
@@ -57,6 +58,8 @@ export const joinParty = ({ hash, isHost }: any) => {
 
     dispatch(setParty({ isHost, ...party }));
     dispatch(setUser({ ...user }));
+
+    syncVideoWithParty();
 
     return { party, user };
   };
