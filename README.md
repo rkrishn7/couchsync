@@ -2,7 +2,7 @@
 
 A browser extension that enables you to sync videos from your favorite streaming platforms, across multiple devices.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project utilizes modified build scripts from `react-scripts`.
 
 ## Available Scripts
 
